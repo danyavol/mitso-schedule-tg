@@ -23,6 +23,7 @@ bot.use(session());
 bot.use(async (ctx, next) => {
 	if (!ctx.session.user) {
 		let user = await findUser({id: ctx.message.from.id});
+		if (user instanceof Error) return ctx.reply(user.message);
 
 		// Данный пользователь уже есть в БД, выгружаем его данные
 		if (user) {
@@ -49,7 +50,6 @@ bot.use(async (ctx, next) => {
 			ctx.session.user = user;
 		}
 	}
-	console.log(ctx.session.user);
 	await next();
 });
 

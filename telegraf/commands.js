@@ -7,7 +7,7 @@ const mainMenuKeyboard = require('./keyboards/mainMenu')
 const bot = new Composer()
 
 bot.start((ctx) => {
-	ctx.reply('Ты открыл главное меню. Для навигации используй клавиши внизу экрана', mainMenuKeyboard(ctx, false))
+	ctx.reply('Ты открыл главное меню. Для навигации используй клавиши внизу экрана', mainMenuKeyboard(ctx))
 });
 
 bot.help((ctx) => {

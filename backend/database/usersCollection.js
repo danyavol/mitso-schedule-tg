@@ -13,8 +13,9 @@ module.exports.saveUser = async (userData) => {
 
 	} catch (e) {
 		console.log('Error saving user data!', e);
+		return new Error('Ошибка соединения с базой данных');
 	} finally {
-		conn.close();
+		if (conn) conn.close();
 	}
 	return savedUser;
 }
@@ -28,9 +29,10 @@ module.exports.findUser = async (query) => {
 
 		foundUser = await User.findOne(query).exec();
 	} catch (e) {
-		console.log('Error saving user data!', e);
+		console.log('Error finding user data!', e);
+		return new Error('Ошибка соединения с базой данных');
 	} finally {
-		conn.close();
+		if (conn) conn.close();
 	}
 	return foundUser;
 }

@@ -1,6 +1,6 @@
 const Markup = require('telegraf/markup');
 
-module.exports = (ctx, oneTime = true) => {
+module.exports = (ctx, oneTime = false) => {
 	let keyboard;
 	if (ctx.state.user && ctx.state.user.myGroup) {
 		// Пользователь уже добавил свою группу

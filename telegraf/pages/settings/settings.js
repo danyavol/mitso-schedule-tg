@@ -1,18 +1,15 @@
 const Markup = require('telegraf/markup');
+const { saveUser } = require('../../../backend/database/usersCollection')
 
 const Composer = require('telegraf/composer')
 const settings = new Composer();
 
 settings.hears(/настройки/i,async (ctx) => {
-
-	// Заглушка
-	if (!ctx.session.user) ctx.session.user = {};
-	if (!ctx.session.user.notifications)ctx.session.user.notifications = {};
-	// End заглушка
+	let keyboard = createKeyboard(ctx);
 
 	await ctx.replyWithMarkdown(
-		'*⚙ Настройки*\n\n_Выбери, что ты хочешь изменить_',
-		Markup.inlineKeyboard(createKeyboard(ctx)).extra()
+		`*⚙ Настройки*\n\n_${keyboard.length ? 'Выбери, что ты хочешь изменить' : 'Сперва добавь группу или лицевой счет, чтобы можно было что-то настраивать 😌'}_`,
+		Markup.inlineKeyboard(keyboard).extra()
 	).then(msg => {
 		// Удаление предыдущего меню
 		if (ctx.session.lastMessageId) ctx.deleteMessage(ctx.session.lastMessageId);
@@ -59,6 +56,9 @@ settings.action(/settings-/, async (ctx) => {
 			break;
 	}
 
+	saveUser(ctx.session.user);
+
+
 	try {
 		// Изменение клавиатуры
 		await ctx.editMessageReplyMarkup({
@@ -78,12 +78,14 @@ function createKeyboard(ctx) {
 
 	// Уведомления
 	let notif = ctx.session && ctx.session.user && ctx.session.user.notifications;
-	if (notif)
-		keyboard = [
-			[Markup.callbackButton(`${notif.scheduleChange ? '🔔' : '🔕'} Уведомлять об изменении расписания`, 'settings-scheduleChangeNotif')],
-			[Markup.callbackButton(`${notif.balanceChange ? '🔔' : '🔕'} Уведомлять об изменении баланса`, 'settings-balanceChangeNotif')],
-			[Markup.callbackButton(`${notif.daySchedule ? '🔔' : '🔕'} Присылать расписание на день`, 'settings-dayScheduleNotif')]
-		];
+	if (notif) {
+		if (notif.scheduleChange != null)
+			keyboard.push( [Markup.callbackButton(`${notif.scheduleChange ? '🔔' : '🔕'} Уведомлять об изменении расписания`, 'settings-scheduleChangeNotif')] );
+		if (notif.balanceChange != null)
+			keyboard.push( [Markup.callbackButton(`${notif.balanceChange ? '🔔' : '🔕'} Уведомлять об изменении баланса`, 'settings-balanceChangeNotif')] );
+		if (notif.daySchedule != null)
+			keyboard.push( [Markup.callbackButton(`${notif.daySchedule ? '🔔' : '🔕'} Присылать расписание на день`, 'settings-dayScheduleNotif')] );
+	}
 
 	// Изменить мою группу
 	let user = ctx.session && ctx.session.user;
