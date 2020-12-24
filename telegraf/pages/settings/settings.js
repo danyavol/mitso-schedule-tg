@@ -1,5 +1,5 @@
 const Markup = require('telegraf/markup');
-const { saveUser } = require('../../../backend/database/usersCollection')
+const { saveUser } = require('../../../src/database/usersCollection')
 
 const Composer = require('telegraf/composer')
 const settings = new Composer();

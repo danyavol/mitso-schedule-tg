@@ -6,10 +6,11 @@ const bot = new Telegraf(process.env.TG_BOT_TOKEN)
 // Imports
 const session = require('telegraf/session')
 
-const { saveUser, findUser } = require('./backend/database/usersCollection');
+const { saveUser, findUser } = require('./src/database/usersCollection');
 
 const base_commands = require('./telegraf/commands');
 const settings_page = require('./telegraf/pages/settings/settings');
+const balance_page = require('./telegraf/pages/balance/balance');
 
 /*
 Пример отправки личного сообщения
@@ -56,6 +57,7 @@ bot.use(async (ctx, next) => {
 
 bot.use(base_commands);
 bot.use(settings_page);
+bot.use(balance_page);
 
 
 
