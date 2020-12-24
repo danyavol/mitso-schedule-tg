@@ -1,0 +1,24 @@
+{
+	"name": "mitso-schedule-tg",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/danyavol/mitso-schedule-tg.git"
+	},
+	"author": "Daniil Volosyuk",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/danyavol/mitso-schedule-tg/issues"
+	},
+	"homepage": "https://github.com/danyavol/mitso-schedule-tg#readme",
+	"dependencies": {
+		"dotenv": "^8.2.0",
+		"mongoose": "^5.11.8",
+		"telegraf": "^3.38.0"
+	}
+}
