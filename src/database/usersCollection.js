@@ -3,13 +3,16 @@ const mongoose = require('mongoose');
 
 
 
-module.exports.saveUser = async (userData) => {
+module.exports.saveUser = async (userData, updateLastUse=false) => {
 	let conn, savedUser;
 	try {
 		conn = await mongoose.createConnection(process.env.DB_URI+'/data', {useNewUrlParser: true, useUnifiedTopology: true});
 		const User = conn.model('User', require('./schemas/user'), 'users');
 
-		savedUser = await User.updateOne({id: userData.id}, new User(userData), {upsert: true}).exec();
+		if (updateLastUse) userData.lastUseAt = Date.now();
+		savedUser = new User(userData);
+
+		await User.updateOne({id: userData.id}, savedUser, {upsert: true});
 
 	} catch (e) {
 		console.log('Error saving user data!', e);

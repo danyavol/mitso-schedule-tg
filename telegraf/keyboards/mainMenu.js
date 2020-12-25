@@ -1,25 +1,24 @@
 const Markup = require('telegraf/markup');
 
 module.exports = (ctx, oneTime = false) => {
-	let keyboard;
-	if (ctx.state.user && ctx.state.user.myGroup) {
-		// Пользователь уже добавил свою группу
-		keyboard = Markup
-			.keyboard([
-				['📗 Сегодня', '📘 Завтра', '📚 Неделя'],
-				['👨🏻‍🎓 Преподаватели', '💰 Баланс'],
-				['🗂 Другие группы', '⚙ Настройки']
-			]);
-	} else {
-		// Моя группа не выбрана
-		keyboard = Markup
-			.keyboard([
-				['✅ Добавить мою группу'],
-				['👨🏻‍🎓 Преподаватели', '💰 Баланс'],
-				['🗂 Другие группы', '⚙ Настройки']
-			]);
-	}
+	let kb = [];
 
+	// Проверка добавил пользователь свою группу или нет
+	if (!ctx.session.user.myGroup) kb.push(['💾 Добавить мою группу']);
+	else kb.push(['📗 Сегодня', '📘 Завтра', '📚 Неделя']);
+
+	// Проверка добавил ли пользователь номер лицевого счета
+	if (ctx.session.user.balance && ctx.session.user.balance.number)
+		kb.push(['👨🏻‍🎓 Преподаватели', '💰 Баланс']);
+	else kb.push(['👨🏻‍🎓 Преподаватели', '💾 Добавить лицевой счет']);
+
+	// Добавление остальных кнопок
+	kb.push(['🗂 Другие группы', '⚙ Настройки']);
+
+	// Инициализация клавиатуры
+	let keyboard = Markup.keyboard(kb);
+
+	// Проверка должна ли клавиатура отображаться до первого нажатия
 	if (oneTime) keyboard = keyboard.oneTime();
 
 	return keyboard.resize().extra();

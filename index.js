@@ -16,11 +16,11 @@ const balance_page = require('./telegraf/pages/balance/balance');
 Пример отправки личного сообщения
 bot.telegram.sendMessage(251137781, 'Сообщение');
  */
-
 bot.use(session());
 
 
-/** Сохранение пользователя в БД при первом обращении */
+/** Сохранение пользователя в БД при первом обращении
+ * Пока не получится загрузить ctx.session.user, бот работать не будет */
 bot.use(async (ctx, next) => {
 	if (!ctx.session.user) {
 		let user = await findUser({id: ctx.message.from.id});
@@ -55,9 +55,10 @@ bot.use(async (ctx, next) => {
 });
 
 
-bot.use(base_commands);
-bot.use(settings_page);
 bot.use(balance_page);
+bot.use(settings_page);
+bot.use(base_commands);
+
 
 
 

@@ -2,19 +2,22 @@ const { Schema } = require('mongoose');
 module.exports = new Schema({
 	id: Number,
 	firstName: String,
-	lastName: {type: String, default: null},
-	username: {type: String, default: null},
+	lastName: String,
+	username: String,
 	isBot: Boolean,
-	language: {type: String, default: null},
+	language: String,
 	// myGroup: {
 	//
 	// },
 	// additionalGroups: [
 	//
 	// ],
-	// balance: {
-	//
-	// },
+	balance: {
+		number: Number,
+		balance: Number,
+		dolg: Number,
+		penia: Number
+	},
 	notifications: {
 		scheduleChange: Boolean,
 		balanceChange: Boolean,

@@ -11,7 +11,6 @@ settings.hears(/настройки/i,async (ctx) => {
 		`*⚙ Настройки*\n\n_${keyboard.length ? 'Выбери, что ты хочешь изменить' : 'Сперва добавь группу или лицевой счет, чтобы можно было что-то настраивать 😌'}_`,
 		Markup.inlineKeyboard(keyboard).extra()
 	).then(msg => {
-		// Удаление предыдущего меню
 		if (ctx.session.lastMessageId) ctx.deleteMessage(ctx.session.lastMessageId);
 		ctx.session.lastMessageId = msg.message_id;
 	});
@@ -53,7 +52,9 @@ settings.action(/settings-/, async (ctx) => {
 		case 'settings-changeMyGroup':
 			break;
 		case 'settings-changeBalance':
-			break;
+			if (ctx.session.lastMessageId) ctx.deleteMessage(ctx.session.lastMessageId);
+			delete ctx.session.lastMessageId;
+			return ctx.scene.enter('addBalance');
 	}
 
 	saveUser(ctx.session.user);
@@ -77,7 +78,7 @@ function createKeyboard(ctx) {
 	let keyboard = [];
 
 	// Уведомления
-	let notif = ctx.session && ctx.session.user && ctx.session.user.notifications;
+	let notif = ctx.session.user.notifications;
 	if (notif) {
 		if (notif.scheduleChange != null)
 			keyboard.push( [Markup.callbackButton(`${notif.scheduleChange ? '🔔' : '🔕'} Уведомлять об изменении расписания`, 'settings-scheduleChangeNotif')] );
@@ -88,12 +89,12 @@ function createKeyboard(ctx) {
 	}
 
 	// Изменить мою группу
-	let user = ctx.session && ctx.session.user;
-	if (user && user.myGroup)
+	let user = ctx.session.user;
+	if (user.myGroup)
 		keyboard.push( [Markup.callbackButton(`📝 Изменить мою группу`, 'settings-changeMyGroup')] );
 
 	// Изменить номер лицевого счета
-	if (user && user.balance)
+	if (user.balance && user.balance.number)
 		keyboard.push( [Markup.callbackButton(`📝 Изменить номер лицевого счета`, 'settings-changeBalance')] );
 
 	return keyboard;

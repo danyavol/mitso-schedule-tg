@@ -84,13 +84,13 @@ function getBalanceFromHtml(html, pass, ifError=false) {
 				} else {
 					switch(i) {
 						case 0:
-							result.data.balance = s.eq(0).text();
+							result.data.balance = +s.eq(0).text();
 							break;
 						case 1:
-							result.data.dolg = s.eq(1).text();
+							result.data.dolg = +s.eq(1).text();
 							break;
 						case 2:
-							result.data.penia = s.eq(2).text();
+							result.data.penia = +s.eq(2).text();
 							break;
 					}
 				}
