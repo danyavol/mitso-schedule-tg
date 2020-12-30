@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
 
-
-
 module.exports.saveUser = async (userData, updateLastUse=false) => {
 	let conn, savedUser;
 	try {
