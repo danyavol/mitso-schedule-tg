@@ -1,5 +1,6 @@
 const { saveUser } = require('../../../src/database/usersCollection')
 const { getUserBalance } = require('../../../src/balance/balance');
+const deleteLastMessage = require('../../deleteLastMessage')
 
 const Composer = require('telegraf/composer')
 const balance = new Composer();
@@ -42,6 +43,7 @@ balance.hears(/(баланс|лицевой счет)/i, async (ctx) => {
 
 
 addBalance.enter((ctx) => {
+	deleteLastMessage(ctx);
 	ctx.reply(
 		'💬 Введи номер лицевого счета',
 		Markup.keyboard([
@@ -71,22 +73,19 @@ addBalance.hears(/\d{3,10}/, async (ctx) => {
 	ctx.scene.leave();
 });
 
-addBalance.hears(/(главн|меню)/, (ctx) => {
+addBalance.hears(/(главн|меню)/i, (ctx) => {
 	ctx.scene.leave();
 });
 
 addBalance.on('message', (ctx) => {
-	ctx.replyWithMarkdown('⚠ Неверный номер лицевого счета, попробуй еще раз.\n\n _Номер должен состоять из цифр длиной от 3 до 10 символов._');
+	ctx.replyWithMarkdown('⚠ Неверный номер лицевого счета, попробуй еще раз.\n\n _Номер должен состоять из цифр длиной от 3 до 10 символов._')
+		.then(msg => deleteLastMessage(ctx, msg.message_id));
 })
 
 
 addBalance.leave((ctx) => {
+	deleteLastMessage(ctx);
 	ctx.replyWithMarkdown(ctx.state.msg || '〽 *Главное меню*', mainMenuKeyboard(ctx));
 })
-
-
-balance.action(/balance-/, async (ctx) => {
-
-});
 
 module.exports = balance;

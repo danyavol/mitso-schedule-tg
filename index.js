@@ -11,6 +11,7 @@ const { saveUser, findUser } = require('./src/database/usersCollection');
 const base_commands = require('./telegraf/commands');
 const settings_page = require('./telegraf/pages/settings/settings');
 const balance_page = require('./telegraf/pages/balance/balance');
+const schedule_page = require('./telegraf/pages/schedule/schedule');
 
 /*
 Пример отправки личного сообщения
@@ -23,6 +24,7 @@ bot.use(session());
  * Пока не получится загрузить ctx.session.user, бот работать не будет */
 bot.use(async (ctx, next) => {
 	if (!ctx.session.user) {
+		if (!ctx.message) return await next();
 		let user = await findUser({id: ctx.message.from.id});
 		if (user instanceof Error) return ctx.reply(user.message);
 
@@ -57,6 +59,7 @@ bot.use(async (ctx, next) => {
 
 bot.use(balance_page);
 bot.use(settings_page);
+bot.use(schedule_page);
 bot.use(base_commands);
 
 

@@ -6,9 +6,10 @@ module.exports = new Schema({
 	username: String,
 	isBot: Boolean,
 	language: String,
-	// myGroup: {
-	//
-	// },
+	myGroup: {
+		group: String,
+		url: String
+	},
 	// additionalGroups: [
 	//
 	// ],

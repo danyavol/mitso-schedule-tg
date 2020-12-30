@@ -1,5 +1,6 @@
 const Markup = require('telegraf/markup');
-const { saveUser } = require('../../../src/database/usersCollection')
+const { saveUser } = require('../../../src/database/usersCollection');
+const deleteLastMessage = require('../../deleteLastMessage');
 
 const Composer = require('telegraf/composer')
 const settings = new Composer();
@@ -10,10 +11,7 @@ settings.hears(/настройки/i,async (ctx) => {
 	await ctx.replyWithMarkdown(
 		`*⚙ Настройки*\n\n_${keyboard.length ? 'Выбери, что ты хочешь изменить' : 'Сперва добавь группу или лицевой счет, чтобы можно было что-то настраивать 😌'}_`,
 		Markup.inlineKeyboard(keyboard).extra()
-	).then(msg => {
-		if (ctx.session.lastMessageId) ctx.deleteMessage(ctx.session.lastMessageId);
-		ctx.session.lastMessageId = msg.message_id;
-	});
+	).then(msg => deleteLastMessage(ctx, msg.message_id));
 });
 
 settings.action(/settings-/, async (ctx) => {
@@ -50,7 +48,9 @@ settings.action(/settings-/, async (ctx) => {
 			}
 			break;
 		case 'settings-changeMyGroup':
-			break;
+			if (ctx.session.lastMessageId) ctx.deleteMessage(ctx.session.lastMessageId);
+			delete ctx.session.lastMessageId;
+			return ctx.scene.enter('selectGroup');
 		case 'settings-changeBalance':
 			if (ctx.session.lastMessageId) ctx.deleteMessage(ctx.session.lastMessageId);
 			delete ctx.session.lastMessageId;
@@ -90,7 +90,7 @@ function createKeyboard(ctx) {
 
 	// Изменить мою группу
 	let user = ctx.session.user;
-	if (user.myGroup)
+	if (user.myGroup.group)
 		keyboard.push( [Markup.callbackButton(`📝 Изменить мою группу`, 'settings-changeMyGroup')] );
 
 	// Изменить номер лицевого счета

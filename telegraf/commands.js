@@ -14,4 +14,8 @@ bot.help((ctx) => {
 	ctx.replyWithMarkdown('Это *бот*');
 });
 
+bot.hears(/(меню|главн)/i, (ctx) => {
+	ctx.replyWithMarkdown('〽 *Главное меню*', mainMenuKeyboard(ctx));
+})
+
 module.exports = bot

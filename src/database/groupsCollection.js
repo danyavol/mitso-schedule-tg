@@ -29,11 +29,12 @@ module.exports.findGroup = async (groupName) => {
 	try {
 		conn = await mongoose.createConnection(process.env.DB_URI+'/data', {useNewUrlParser: true, useUnifiedTopology: true});
 		group = await conn.collection('groups').find({group: {$regex: groupName, $options: "i"}} ).toArray();
-		console.log(group);
 	} catch (e) {
 		console.log('Error finding group!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
 	}
+
+	return group;
 }
