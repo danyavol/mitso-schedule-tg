@@ -17,13 +17,10 @@ module.exports.timeStamp = () => {
 /**
  * Преобразует длинную дату в короткую
  *
- * input -> "7 января 2021"
- * output -> "07.01.2021"
+ * input -> "7 января"
+ * output -> "07.01"
  */
 module.exports.longToShortDate = (longDate) => {
-	// input -> '7 января 2021'
-	// output -> '07.01.2021'
-
 	let output = longDate.split(' ');
 
 	// output[0] - day
@@ -49,8 +46,7 @@ module.exports.longToShortDate = (longDate) => {
 	}
 	if (flag) return ''; // if incorrect month name
 
-	// output[2] - year
-	return output.join('.');
+	return output[0] + '.' + output[1];
 }
 
 
@@ -128,4 +124,34 @@ module.exports.encodeWeekNumber = (weekDate) => {
 	if (nowMonth > 9 && parseInt(output[1]) < 4) nowYear++;
 
 	return '' + nowYear + output[1] + output[0];
+};
+
+/** Возвращает название коллекции текущей недели(в воскресенье начинается следующая неделя)
+ *
+ * input ->
+ * output -> '20200608'
+ */
+module.exports.getCurrentWeek = () => {
+	// Текущая дата с точностью до часов
+	let now = new Date();
+	now = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours()+3);
+
+	// Проверка какой сейчас день недели
+	// Если сейчас воскресенье
+	if (now.getDay() === 0) {
+		// Добавляем ровно 1 день, чтобы стал понедельник
+		now = new Date(now.getTime()+1000*60*60*24)
+	}
+	// Если любой другой день
+	else if (now.getDay() > 1) {
+		// Отнимаем столько дней, чтобы была дата понедельника
+		now = new Date(now.getTime()-(now.getDay()-1)*1000*60*60*24)
+	}
+
+	// Определение месяца и даты
+	let month = now.getMonth() + 1, date = now.getDate();
+	month < 10 ? month = '0' + month : null;
+	date < 10 ? date = '0' + date : null;
+
+	return '' + now.getFullYear() + month + date;
 };

@@ -31,3 +31,20 @@ module.exports.saveSchedule = async (schedule) => {
 		if (conn) conn.close();
 	}
 }
+
+module.exports.getWeekSchedule = async (collectionName, group) => {
+	let conn, schedule;
+	try {
+		conn = await mongoose.createConnection(process.env.DB_URI+'/schedule', {useNewUrlParser: true, useUnifiedTopology: true});
+		let collection = conn.collection(collectionName);
+
+		schedule = await collection.findOne({group: group});
+	} catch (e) {
+		console.log('Error getting week schedule data!', e);
+		return new Error('Ошибка соединения с базой данных');
+	} finally {
+		if (conn) conn.close();
+	}
+
+	return schedule && schedule.lessons;
+};

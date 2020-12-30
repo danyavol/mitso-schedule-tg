@@ -4,6 +4,8 @@ const httpsAgent = new https.Agent( {rejectUnauthorized: false} );
 
 const cheerio = require('cheerio');
 
+const { saveGroups } = require('../../database/groupsCollection');
+
 let requestCounter = 0;
 
 module.exports = async function createLinks(weekNumber) {
@@ -74,14 +76,21 @@ module.exports = async function createLinks(weekNumber) {
 					group.inner.map(week => {
 						if (weekNumber == null || weekNumber == week.name) {
 							if ( !Array.isArray(outputLinks[week.name]) ) outputLinks[week.name] = [];
-							outputLinks[week.name].push(`https://mitso.by/schedule/${forma.name}/${fakultet.name}/${kurse.name}/${group.name}/${week.name}`);
+							let link = `https://mitso.by/schedule/${forma.name}/${fakultet.name}/${kurse.name}/${group.name}/${week.name}`;
+							outputLinks[week.name].push(link);
 						}
 					});
-					groupsList.push(group.title);
+					groupsList.push({
+						name: group.title,
+						url: `https://mitso.by/schedule/${forma.name}/${fakultet.name}/${kurse.name}/${group.name}`
+					});
 				});
 			});
 		});
 	});
+
+	// Сохранение списка групп в БД
+	await saveGroups(groupsList);
 
 	return outputLinks;
 }
