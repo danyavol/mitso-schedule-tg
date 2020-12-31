@@ -3,7 +3,6 @@ require('dotenv').config()
 const { Telegraf } = require('telegraf')
 const bot = new Telegraf(process.env.TG_BOT_TOKEN)
 
-// Imports
 const session = require('telegraf/session')
 
 const { saveUser, findUser } = require('./src/database/usersCollection');
@@ -17,7 +16,18 @@ const schedule_page = require('./telegraf/pages/schedule/schedule');
 Пример отправки личного сообщения
 bot.telegram.sendMessage(251137781, 'Сообщение');
  */
+
 bot.use(session());
+
+/** Stage middleware */
+const Stage = require('telegraf/stage');
+const stage = new Stage();
+
+stage.register(require('./telegraf/scenes/selectGroup'));
+stage.register(require('./telegraf/scenes/addBalance'));
+
+bot.use(stage.middleware());
+/** End Stage middleware */
 
 
 /** Сохранение пользователя в БД при первом обращении
@@ -56,50 +66,10 @@ bot.use(async (ctx, next) => {
 	await next();
 });
 
-
+bot.use(schedule_page);
 bot.use(balance_page);
 bot.use(settings_page);
-bot.use(schedule_page);
 bot.use(base_commands);
-
-
-/**
- * Каким образом будет происходить просмотр баланса?
- * ------------
- * Просмотр всего расписания пользователем будет производиться ТОЛЬКО из БД.
- * Периодически сервер будет отправять запрос на сайт МИТСО и получать актуальное расписание.
- * Для людей, подписавшихся на уведомления, проверка будет производиться каждые 10 минут
- * Расписание остальных групп будет обновляться раз в сутки
- *
- *
- * Процесс сохранения всего расписания в БД
- * ------------
- * 1) Создание массива ссылок, на которые будут отправляться запросы
- * 		Включается в себя дерево запросов на /schedule_update и составляется большой массив ссылок на абсолютно все группы и недели
- * 2) Отправка запросов на эти ссылки
- * 		С некоторым интервалом отправляются запросы на эти ссылки. Запросы, не получившие ответ,
- * 		добавляются в отдельный массив и будут отправлены повторно позднее.
- * 		Результатом выполнения этой функции будет куча HTML строк
- * 3) Парсинг HTML страничек
- * 		На этом этапе HTML строки будут преобразовываться в DOM дерево и будет производиться поиск занятий
- * 		Сформируется масиив, подготовленный к сохранению в БД
- * 4) Сохранение в БД
- *
- * 
- *
- * */
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

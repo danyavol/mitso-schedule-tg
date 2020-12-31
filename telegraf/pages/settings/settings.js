@@ -48,17 +48,15 @@ settings.action(/settings-/, async (ctx) => {
 			}
 			break;
 		case 'settings-changeMyGroup':
-			if (ctx.session.lastMessageId) ctx.deleteMessage(ctx.session.lastMessageId);
-			delete ctx.session.lastMessageId;
+			deleteLastMessage(ctx);
+			ctx.session.sceneType = "mySchedule";
 			return ctx.scene.enter('selectGroup');
 		case 'settings-changeBalance':
-			if (ctx.session.lastMessageId) ctx.deleteMessage(ctx.session.lastMessageId);
-			delete ctx.session.lastMessageId;
+			deleteLastMessage(ctx);
 			return ctx.scene.enter('addBalance');
 	}
 
 	saveUser(ctx.session.user);
-
 
 	try {
 		// Изменение клавиатуры
