@@ -47,7 +47,7 @@ function getBalanceFromHtml(html, pass, ifError=false) {
 
 	// Не удалось отправить запрос
 	if (ifError) {
-		result.text = 'Не удалось отправить запрос на сайт МИТСО.';
+		result.text = '⚠ Не удалось отправить запрос на сайт МИТСО.';
 		result.error = true;
 		return result;
 	}
@@ -57,10 +57,10 @@ function getBalanceFromHtml(html, pass, ifError=false) {
 
 		// Проверка правильности ввода лицевого счета
 		if ($('#container').length === 0) {
-			result.text = 'Не удалось получить данные о балансе.';
+			result.text = '⚠ Не удалось получить данные о балансе.';
 			$('p').each(function (i, elem) {
 				if ( $( this ).text().match(/Ошибка входа/) ) {
-					result.text = 'Ошибка входа. Попробуйте изменить номер лицевого счета.'
+					result.text = '❌ Ошибка входа. Попробуй изменить номер лицевого счета.'
 				}
 			})
 			result.error = true;
@@ -99,7 +99,7 @@ function getBalanceFromHtml(html, pass, ifError=false) {
 		}
 	} catch (e) {
 		console.log(e);
-		result.text = 'Не удалось обработать запрос и получить данные о балансе.';
+		result.text = '⚠ Не удалось обработать запрос и получить данные о балансе.';
 		result.error = true;
 	}
 	return result;

@@ -82,7 +82,6 @@ module.exports.decodeWeekNumber = (weekCode) => {
 }
 
 
-
 /** Преобразует номер недели в код для названия коллекции в БД. (код недели - дата понедельника)
  *
  * input -> '8 июня-13 июня'
@@ -126,27 +125,41 @@ module.exports.encodeWeekNumber = (weekDate) => {
 	return '' + nowYear + output[1] + output[0];
 };
 
-/** Возвращает название коллекции текущей недели(в воскресенье начинается следующая неделя)
+
+/** Возвращает название коллекции выбранной недели(в воскресенье начинается следующая неделя)
  *
- * input ->
+ * input -> weekIncrement (0 текущая, 1 следующая неделя, -1 предыдущая неделя)
+ * 			currentDate instance of Date
  * output -> '20200608'
  */
-module.exports.getCurrentWeek = () => {
-	// Текущая дата с точностью до часов
-	let now = new Date();
+module.exports.selectWeek = selectWeek;
+function selectWeek (weekIncrement = 0, currentDate) {
+	let now;
+	if (currentDate && currentDate instanceof Date) now = currentDate;
+	else now = new Date();
+	// Текущая дата
 	now = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours()+3);
 
 	// Проверка какой сейчас день недели
 	// Если сейчас воскресенье
 	if (now.getDay() === 0) {
-		// Добавляем ровно 1 день, чтобы стал понедельник
-		now = new Date(now.getTime()+1000*60*60*24)
+		// Если currentDate был передам, возвращаем фактичекую неделю,
+		// иначе воскресенье становится следующей неделей
+		if (currentDate)
+			// Убираем 6 дней
+			now = new Date(now.getTime()-1000*60*60*24*6);
+		 else
+			// Добавляем 1 день
+			now = new Date(now.getTime()+1000*60*60*24);
 	}
 	// Если любой другой день
 	else if (now.getDay() > 1) {
-		// Отнимаем столько дней, чтобы была дата понедельника
+		// Отнимаем столько дней, чтобы дата стала понедельником
 		now = new Date(now.getTime()-(now.getDay()-1)*1000*60*60*24)
 	}
+
+	// Инкрементирование, чтобы получить нужную неделю
+	now = new Date( now.getTime() + (1000*60*60*24*7)*weekIncrement );
 
 	// Определение месяца и даты
 	let month = now.getMonth() + 1, date = now.getDate();
@@ -154,4 +167,53 @@ module.exports.getCurrentWeek = () => {
 	date < 10 ? date = '0' + date : null;
 
 	return '' + now.getFullYear() + month + date;
+}
+
+
+/** Возвращает день, расписание на который пользователь хочет получить
+ *
+ * input -> dayIncrement (0 сегодня, 1 завтра, 2 послезавтра, -1 вчера, -2 позавчера)
+ * output -> {date: '19 октября', day: 'завтра', collection: '20201019'}
+ */
+module.exports.selectDay = (dayIncrement=0) => {
+	const final = {};
+
+	// Выбранная дата
+	let dd = new Date();
+	dd = new Date(dd.getUTCFullYear(), dd.getUTCMonth(), dd.getUTCDate() + dayIncrement, dd.getUTCHours() + 3);
+
+	// Определение дня недели
+	final.dayOfWeek = dd.getDay();
+
+	// Определение даты
+	let ddMonth;
+	switch (dd.getMonth() + 1) {
+		case 1: ddMonth = 'января'; break;
+		case 2: ddMonth = 'февраля'; break;
+		case 3: ddMonth = 'марта'; break;
+		case 4: ddMonth = 'апреля'; break;
+		case 5: ddMonth = 'мая'; break;
+		case 6: ddMonth = 'июня'; break;
+		case 7: ddMonth = 'июля'; break;
+		case 8: ddMonth = 'августа'; break;
+		case 9: ddMonth = 'сентября'; break;
+		case 10: ddMonth = 'октября'; break;
+		case 11: ddMonth = 'ноября'; break;
+		case 12: ddMonth = 'декабря'; break;
+	}
+	final.date = `${dd.getDate()} ${ddMonth}`;
+
+	// Определение дня
+	switch (dayIncrement) {
+		case 0: final.day = 'сегодня'; break;
+		case 1: final.day = 'завтра'; break;
+		case 2: final.day = 'послезавтра'; break;
+		case -1: final.day = 'вчера'; break;
+		case -2: final.day = 'позавчера'; break;
+	}
+
+	// Получение названия коллекции
+	final.collection = selectWeek(0, dd);
+
+	return final;
 };

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { encodeWeekNumber } = require('../components/time')
+const { encodeWeekNumber, selectWeek } = require('../components/time')
 
 
 module.exports.saveSchedule = async (schedule) => {
@@ -32,11 +32,15 @@ module.exports.saveSchedule = async (schedule) => {
 	}
 }
 
-module.exports.getWeekSchedule = async (collectionName, group) => {
+module.exports.getAvailableWeeks = (group) => {
+
+};
+
+module.exports.getWeekSchedule = async (group, weekIncrement=0) => {
 	let conn, schedule;
 	try {
 		conn = await mongoose.createConnection(process.env.DB_URI+'/schedule', {useNewUrlParser: true, useUnifiedTopology: true});
-		let collection = conn.collection(collectionName);
+		let collection = conn.collection(selectWeek(weekIncrement));
 
 		schedule = await collection.findOne({group: group});
 	} catch (e) {
