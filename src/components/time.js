@@ -125,6 +125,17 @@ module.exports.encodeWeekNumber = (weekDate) => {
 	return '' + nowYear + output[1] + output[0];
 };
 
+/** Возвращает название недели по имени коллекции */
+module.exports.getWeekTitle = (collectionName) => {
+	let weekIncrement = 0;
+	while(selectWeek(weekIncrement) !== collectionName && weekIncrement < 20) {
+		weekIncrement++;
+	}
+
+	if (weekIncrement === 0) return 'Текущая неделя';
+	return weekIncrement+1 + ' неделя';
+};
+
 
 /** Возвращает название коллекции выбранной недели(в воскресенье начинается следующая неделя)
  *

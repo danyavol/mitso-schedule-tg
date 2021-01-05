@@ -12,6 +12,9 @@ const settings_page = require('./telegraf/pages/settings/settings');
 const balance_page = require('./telegraf/pages/balance/balance');
 const schedule_page = require('./telegraf/pages/schedule/schedule');
 
+const autoExecution = require('./src/autoExecuting/index');
+autoExecution(bot);
+
 /*
 Пример отправки личного сообщения
 bot.telegram.sendMessage(251137781, 'Сообщение');
@@ -25,6 +28,7 @@ const stage = new Stage();
 
 stage.register(require('./telegraf/scenes/selectGroup'));
 stage.register(require('./telegraf/scenes/addBalance'));
+stage.register(require('./telegraf/scenes/selectWeek'));
 
 bot.use(stage.middleware());
 /** End Stage middleware */

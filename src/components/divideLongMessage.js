@@ -8,7 +8,7 @@ const LIMIT = 4096;
  * output -> Array of Strings, each max <LIMIT> length
  */
 module.exports = function (msg) {
-	if (msg.length <= LIMIT) return msg;
+	if (msg.length <= LIMIT) return [msg];
 	let input = msg.split('\n');
 	let output = [''];
 	let i = 0;
