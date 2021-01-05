@@ -11,6 +11,7 @@ const base_commands = require('./telegraf/commands');
 const settings_page = require('./telegraf/pages/settings/settings');
 const balance_page = require('./telegraf/pages/balance/balance');
 const schedule_page = require('./telegraf/pages/schedule/schedule');
+const teachers_page = require('./telegraf/pages/teachers/teachers');
 
 const autoExecution = require('./src/autoExecuting/index');
 autoExecution(bot);
@@ -72,6 +73,7 @@ bot.use(async (ctx, next) => {
 
 bot.use(schedule_page);
 bot.use(balance_page);
+bot.use(teachers_page);
 bot.use(settings_page);
 bot.use(base_commands);
 

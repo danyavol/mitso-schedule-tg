@@ -4,3 +4,4 @@ module.exports = schedule;
 
 
 schedule.use(require('./mySchedule/mySchedule'));
+schedule.use(require('./otherSchedule/otherSchedule'));
