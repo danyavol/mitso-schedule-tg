@@ -30,6 +30,7 @@ const stage = new Stage();
 stage.register(require('./telegraf/scenes/selectGroup'));
 stage.register(require('./telegraf/scenes/addBalance'));
 stage.register(require('./telegraf/scenes/selectWeek'));
+stage.register(require('./telegraf/scenes/showTeacherSchedule'));
 
 bot.use(stage.middleware());
 /** End Stage middleware */

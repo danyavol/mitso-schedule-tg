@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { encodeWeekNumber, selectWeek, getWeekTitle } = require('../components/time')
+const { encodeWeekNumber, selectWeek, getWeekTitle, getDate } = require('../components/time')
 
 
 module.exports.saveSchedule = async (schedule) => {
@@ -44,9 +44,11 @@ module.exports.getAvailableWeeks = async (group) => {
 		collections = collections.filter(item => +item.name >= +currentWeek);
 
 		// Оставляем только недели, на которых есть расписание выбранной группы
+		// (либо все коллекции, если группа не указана)
 		for (let i = collections.length-1; i >= 0; i--) {
-			let lessons = await conn.collection(collections[i].name).findOne({group: group});
-			if (lessons == null)
+			let lessons;
+			if (group) lessons = await conn.collection(collections[i].name).findOne({group: group});
+			if (lessons == null && group)
 				collections.splice(i, 1);
 			else
 				weeks.push({
@@ -104,4 +106,48 @@ module.exports.getDaySchedule = async (group, collectionName, date) => {
 	}
 
 	return schedule && schedule.lessons;
+}
+
+module.exports.getTeacherSchedule = async (teacherName, collectionName) => {
+	let conn, schedule = [];
+	try {
+		conn = await mongoose.createConnection(process.env.DB_URI+'/schedule', {useNewUrlParser: true, useUnifiedTopology: true});
+
+		let weekSchedule = await conn.collection(collectionName).find().toArray();
+
+		// Поиск всех пар, где есть выбранный преподаватель
+		weekSchedule.map(group => {
+			group.lessons.map(lesson => {
+				lesson.teachers.map(teacher => {
+					if (teacher === teacherName) {
+						schedule.push(lesson);
+					}
+				});
+			});
+		});
+
+		// Сортировка пар по дате
+		if (schedule.length) {
+			schedule.sort((a, b) => getDate(a.date, a.time) - getDate(b.date, b.time) );
+		}
+
+		// Объединение пар у разных групп, но в одно время
+		for (let i = 1; i < schedule.length; i++) {
+			if (schedule[i].date === schedule[i-1].date &&
+			schedule[i].time === schedule[i-1].time &&
+			schedule[i].lessonName === schedule[i-1].lessonName &&
+			schedule[i].lessonType === schedule[i-1].lessonType &&
+			schedule[i].classRoom === schedule[i-1].classRoom) {
+				schedule[i-1].group += ', ' + schedule[i].group;
+				schedule.splice(i--, 1);
+			}
+		}
+	} catch (e) {
+		console.log('Error getting teacher schedule!', e);
+		return new Error('Ошибка соединения с базой данных');
+	} finally {
+		if (conn) conn.close();
+	}
+
+	return schedule;
 }

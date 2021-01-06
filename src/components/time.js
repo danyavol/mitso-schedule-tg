@@ -84,7 +84,7 @@ module.exports.decodeWeekNumber = (weekCode) => {
 
 /** Преобразует номер недели в код для названия коллекции в БД. (код недели - дата понедельника)
  *
- * input -> '8 июня-13 июня'
+ * input -> '8 июня-13 июня' or '8 июня'
  * output -> '20200608'
  */
 module.exports.encodeWeekNumber = (weekDate) => {
@@ -227,4 +227,38 @@ module.exports.selectDay = (dayIncrement=0) => {
 	final.collection = selectWeek(0, dd);
 
 	return final;
+};
+
+/** Возвращает дату занятия */
+module.exports.getDate = (date, time) => {
+	date = 	date.split(' ');
+	time = time.split('-')[0].split(':');
+
+	switch (date[1].slice(0,-1)) {
+		case 'январ': date[1] = 0; break;
+		case 'феврал': date[1] = 1; break;
+		case 'март': date[1] = 2; break;
+		case 'мар': date[1] = 3; break;
+		case 'апрел': date[1] = 4; break;
+		case 'ма': date[1] = 5; break;
+		case 'июн': date[1] = 6; break;
+		case 'июл': date[1] = 7; break;
+		case 'август': date[1] = 8; break;
+		case 'сентябр': date[1] = 9; break;
+		case 'октябр': date[1] = 10; break;
+		case 'ноябр': date[1] = 11; break;
+		case 'декабр': date[1] = 12; break;
+	}
+
+	let now = new Date();
+
+	if (date[1] > 9 && now.getMonth() < 3) now.setFullYear(now.getFullYear()-1);
+	else if (date[1] < 3 && now.getMonth() > 9) now.setFullYear(now.getFullYear()+1);
+
+	now.setMonth(date[1]);
+	now.setDate(+date[0]);
+	now.setHours(time[0]);
+	now.setMinutes(time[1]);
+
+	return now.getTime();
 };

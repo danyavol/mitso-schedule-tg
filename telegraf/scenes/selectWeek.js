@@ -17,6 +17,12 @@ selectWeek.enter(async (ctx) => {
 			keyboard.push([Markup.callbackButton(week.name, `mySchedule-${week.collection}`)]);
 		}
 		keyboard.push([Markup.callbackButton('📂 Предыдущие недели', `mySchedule-archive`)]);
+	} else if (ctx.session.sceneType === 'teacherSchedule') {
+		let weeks = await getAvailableWeeks();
+
+		for (let week of weeks) {
+			keyboard.push([Markup.callbackButton(week.name, `teacherSchedule-${week.collection}`)]);
+		}
 	}
 
 	ctx.replyWithMarkdown('📅 Выбери нужную неделю',
