@@ -8,24 +8,43 @@ const selectWeek = new Scene('selectWeek');
 module.exports = selectWeek;
 
 selectWeek.enter(async (ctx) => {
-	let keyboard = [];
-	// Расписание моей группы
-	if (ctx.session.sceneType === 'mySchedule') {
-		let weeks = await getAvailableWeeks(ctx.session.user.myGroup.group);
+	let keyboard = [],
+		group, title, archive = false, archiveTitle;
 
-		for (let week of weeks) {
-			keyboard.push([Markup.callbackButton(week.name, `mySchedule-${week.collection}`)]);
-		}
-		keyboard.push([Markup.callbackButton('📂 Предыдущие недели', `mySchedule-archive`)]);
-	} else if (ctx.session.sceneType === 'teacherSchedule') {
-		let weeks = await getAvailableWeeks();
-
-		for (let week of weeks) {
-			keyboard.push([Markup.callbackButton(week.name, `teacherSchedule-${week.collection}`)]);
-		}
+	switch (ctx.session.sceneType) {
+		case "mySchedule":
+			group = ctx.session.user.myGroup.group;
+			title = 'mySchedule-';
+			archiveTitle = 'mySchedule-archive'
+			break;
+		case "myScheduleArchive":
+			group = ctx.session.user.myGroup.group;
+			title = 'mySchedule-';
+			archive = true;
+			break;
+		case "teacherSchedule":
+			title = 'teacherSchedule-';
+			archiveTitle = 'teacherSchedule-archive';
+			break;
+		case "teacherScheduleArchive":
+			title = 'teacherSchedule-';
+			archive = true;
+			break;
 	}
 
-	ctx.replyWithMarkdown('📅 Выбери нужную неделю',
+	// Массив недель, котоыре нужно показать пользователю
+	let weeks = await getAvailableWeeks(group, archive);
+
+	// Преобразование массива недель в массив кнопок
+	for (let week of weeks) {
+		keyboard.push([Markup.callbackButton(week.name, title + week.collection)]);
+	}
+
+	// Если показывается НЕ архив, тогда добавить дополнительную кнопку для открытия архива
+	if (!archive) keyboard.push([Markup.callbackButton('📂 Предыдущие недели', archiveTitle)]);
+
+
+	ctx.replyWithMarkdown(`📅 Выбери нужную неделю${archive ? '\n\n_Отображается дата начала недели, понедельник_' : ''}`,
 		Markup.inlineKeyboard(keyboard).extra())
 	.then(msg => {
 		deleteLastMessage(ctx, msg.message_id);

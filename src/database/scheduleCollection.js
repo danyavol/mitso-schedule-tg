@@ -33,15 +33,16 @@ module.exports.saveSchedule = async (schedule) => {
 }
 
 /** Получение списка актуальных недель выбранной группы */
-module.exports.getAvailableWeeks = async (group) => {
+module.exports.getAvailableWeeks = async (group, archive=false) => {
 	let conn, weeks = [];
 	try {
 		conn = await mongoose.createConnection(process.env.DB_URI+'/schedule', {useNewUrlParser: true, useUnifiedTopology: true});
 		let collections = await conn.db.listCollections().toArray();
 
-		// Оставляем только актуальные недели
+		// Оставляем только актуальные недели либо недели архива
 		let currentWeek = selectWeek(0);
-		collections = collections.filter(item => +item.name >= +currentWeek);
+		if (archive) collections = collections.filter(item => +item.name < +currentWeek);
+		else collections = collections.filter(item => +item.name >= +currentWeek);
 
 		// Оставляем только недели, на которых есть расписание выбранной группы
 		// (либо все коллекции, если группа не указана)
@@ -53,7 +54,7 @@ module.exports.getAvailableWeeks = async (group) => {
 			else
 				weeks.push({
 					collection: collections[i].name,
-					name: getWeekTitle(collections[i].name)
+					name: getWeekTitle(collections[i].name, archive)
 				});
 		}
 		// Сортировка недель

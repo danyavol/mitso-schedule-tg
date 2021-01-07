@@ -44,13 +44,15 @@ showTeacherSchedule.on('text', async (ctx) => {
 
 	// Отправка расписания пользователю
 	if (schedule.length) {
-		let dividedMessage = weekSchedule(schedule, teacherName, getWeekTitle(ctx.session.selectedWeek), true);
+		let dividedMessage = weekSchedule(schedule, teacherName, ctx.session.archive ? 'Из архива' : getWeekTitle(ctx.session.selectedWeek), true);
 		for (let msg of dividedMessage) {
 			await ctx.reply(msg, mainMenuKeyboard(ctx));
 		}
 	} else {
 		await ctx.reply(`🏖 Преподаватель ${teacherName} не найден, либо у него нету занятий на данной неделе.`, mainMenuKeyboard(ctx));
 	}
+
+	delete ctx.session.archive;
 
 	ctx.scene.leave();
 });

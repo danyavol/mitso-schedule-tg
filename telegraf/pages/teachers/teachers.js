@@ -15,6 +15,13 @@ teachers.hears(/преподаватели/i,async (ctx) => {
 
 teachers.action(/teachers-schedule/, (ctx) => {
 	ctx.session.sceneType = "teacherSchedule";
+	ctx.session.archive = false;
+	ctx.scene.enter('selectWeek');
+});
+
+teachers.action(/teacherSchedule-archive/, (ctx) => {
+	ctx.session.sceneType = "teacherScheduleArchive";
+	ctx.session.archive = true;
 	ctx.scene.enter('selectWeek');
 });
 

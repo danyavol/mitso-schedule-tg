@@ -56,7 +56,8 @@ module.exports.longToShortDate = (longDate) => {
  * input -> 20200817 or "20200817"
  * output -> "17 августа 2020"
 */
-module.exports.decodeWeekNumber = (weekCode) => {
+module.exports.decodeWeekNumber = decodeWeekNumber;
+function decodeWeekNumber(weekCode) {
 	let output = [];
 	let temp = (''+weekCode).split('');
 	output.push( temp[6]+temp[7] );
@@ -126,11 +127,12 @@ module.exports.encodeWeekNumber = (weekDate) => {
 };
 
 /** Возвращает название недели по имени коллекции */
-module.exports.getWeekTitle = (collectionName) => {
+module.exports.getWeekTitle = (collectionName, archive=false) => {
 	let weekIncrement = 0;
-	while(selectWeek(weekIncrement) !== collectionName && weekIncrement < 20) {
-		weekIncrement++;
-	}
+	if (!archive)
+		while(selectWeek(weekIncrement) !== collectionName && weekIncrement < 20) weekIncrement++;
+	else
+		return decodeWeekNumber(collectionName);
 
 	if (weekIncrement === 0) return 'Текущая неделя';
 	return weekIncrement+1 + ' неделя';
