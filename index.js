@@ -69,6 +69,10 @@ bot.use(async (ctx, next) => {
 			ctx.session.user = user;
 		}
 	}
+	// Обновление lastUseAt
+	if (Date.now() - ctx.session.user.lastUseAt.getTime() >= 1000*60*60) {
+		saveUser(ctx.sesssion.user, true);
+	}
 	await next();
 });
 
