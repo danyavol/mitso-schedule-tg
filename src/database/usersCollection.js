@@ -21,6 +21,21 @@ module.exports.saveUser = async (userData, updateLastUse=false) => {
 	return savedUser;
 }
 
+module.exports.deleteUser = async (tgId) => {
+	let conn;
+	try {
+		conn = await mongoose.createConnection(process.env.DB_URI+'/data', {useNewUrlParser: true, useUnifiedTopology: true});
+
+		await conn.collection('users').deleteOne({id: tgId});
+
+	} catch (e) {
+		console.log('Error deleting user!', e);
+		return new Error('Ошибка соединения с базой данных');
+	} finally {
+		if (conn) conn.close();
+	}
+};
+
 
 module.exports.findUser = async (query) => {
 	let conn, foundUser;
