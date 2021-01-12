@@ -51,4 +51,19 @@ module.exports.findUser = async (query) => {
 		if (conn) conn.close();
 	}
 	return foundUser;
-}
+};
+
+module.exports.getAllUsers = async () => {
+	let conn, foundUsers;
+	try {
+		conn = await mongoose.createConnection(process.env.DB_URI+'/data', {useNewUrlParser: true, useUnifiedTopology: true});
+
+		foundUsers = await conn.collection('users').find().toArray();
+	} catch (e) {
+		console.log('Error finding user data!', e);
+		return new Error('Ошибка соединения с базой данных');
+	} finally {
+		if (conn) conn.close();
+	}
+	return foundUsers;
+};

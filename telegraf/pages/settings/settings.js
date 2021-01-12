@@ -32,10 +32,10 @@ settings.action(/settings-/, async (ctx) => {
 		case 'settings-balanceChangeNotif':
 			if (ctx.session.user.notifications.balanceChange) {
 				ctx.session.user.notifications.balanceChange = false;
-				alertText = 'Бот больше не будет уведомлять об изменении баланса';
+				alertText = '🔇 Бот больше не будет уведомлять об изменении баланса';
 			} else {
 				ctx.session.user.notifications.balanceChange = true;
-				alertText = 'Бот будет уведомлять об изменении баланса';
+				alertText = '🔊 Бот будет присылать сообщение, если баланс лицевого счета изменился.\n\nПроверка производится каждый час';
 			}
 			break;
 		case 'settings-dayScheduleNotif':
@@ -77,14 +77,13 @@ function createKeyboard(ctx) {
 
 	// Уведомления
 	let notif = ctx.session.user.notifications;
-	if (notif) {
-		if (notif.scheduleChange != null)
-			keyboard.push( [Markup.callbackButton(`${notif.scheduleChange ? '🔔' : '🔕'} Уведомлять об изменении расписания`, 'settings-scheduleChangeNotif')] );
-		if (notif.balanceChange != null)
-			keyboard.push( [Markup.callbackButton(`${notif.balanceChange ? '🔔' : '🔕'} Уведомлять об изменении баланса`, 'settings-balanceChangeNotif')] );
-		if (notif.daySchedule != null)
-			keyboard.push( [Markup.callbackButton(`${notif.daySchedule ? '🔔' : '🔕'} Присылать расписание на день`, 'settings-dayScheduleNotif')] );
-	}
+
+	//keyboard.push( [Markup.callbackButton(`${notif.scheduleChange ? '🔔' : '🔕'} Уведомлять об изменении расписания`, 'settings-scheduleChangeNotif')] );
+
+	keyboard.push( [Markup.callbackButton(`${notif.balanceChange ? '🔔' : '🔕'} Уведомлять об изменении баланса`, 'settings-balanceChangeNotif')] );
+
+	//keyboard.push( [Markup.callbackButton(`${notif.daySchedule ? '🔔' : '🔕'} Присылать расписание на день`, 'settings-dayScheduleNotif')] );
+
 
 	// Изменить мою группу
 	let user = ctx.session.user;

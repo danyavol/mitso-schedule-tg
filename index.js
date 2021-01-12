@@ -3,8 +3,6 @@ require('dotenv').config()
 const { Telegraf } = require('telegraf')
 const bot = new Telegraf(process.env.TG_BOT_TOKEN)
 
-const session = require('telegraf/session')
-
 const { saveUser, findUser } = require('./src/database/usersCollection');
 
 const base_commands = require('./telegraf/commands');
@@ -13,27 +11,13 @@ const balance_page = require('./telegraf/pages/balance/balance');
 const schedule_page = require('./telegraf/pages/schedule/schedule');
 const teachers_page = require('./telegraf/pages/teachers/teachers');
 
+
 const autoExecution = require('./src/autoExecuting/index');
 autoExecution(bot);
 
-/*
-Пример отправки личного сообщения
-bot.telegram.sendMessage(251137781, 'Сообщение');
- */
 
+const session = require('telegraf/session')
 bot.use(session());
-
-/** Stage middleware */
-const Stage = require('telegraf/stage');
-const stage = new Stage();
-
-stage.register(require('./telegraf/scenes/selectGroup'));
-stage.register(require('./telegraf/scenes/addBalance'));
-stage.register(require('./telegraf/scenes/selectWeek'));
-stage.register(require('./telegraf/scenes/showTeacherSchedule'));
-
-bot.use(stage.middleware());
-/** End Stage middleware */
 
 
 /** Сохранение пользователя в БД при первом обращении
@@ -75,6 +59,18 @@ bot.use(async (ctx, next) => {
 	}
 	await next();
 });
+
+/** Stage middleware */
+const Stage = require('telegraf/stage');
+const stage = new Stage();
+
+stage.register(require('./telegraf/scenes/selectGroup'));
+stage.register(require('./telegraf/scenes/addBalance'));
+stage.register(require('./telegraf/scenes/selectWeek'));
+stage.register(require('./telegraf/scenes/showTeacherSchedule'));
+
+bot.use(stage.middleware());
+/** End Stage middleware */
 
 bot.use(schedule_page);
 bot.use(balance_page);

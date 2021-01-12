@@ -25,6 +25,9 @@ addBalance.hears(/\d{3,10}/, async (ctx) => {
 	if (!ctx.session.user.balance) ctx.session.user.balance = {};
 	ctx.session.user.balance.number = number;
 
+	// Уведомления об изменении баланса
+	ctx.session.user.notifications.balanceChange = false;
+
 
 	// Сохранение изменений в базу данных
 	let savedUser = await saveUser(ctx.session.user, true);
