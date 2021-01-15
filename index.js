@@ -24,8 +24,17 @@ bot.use(session());
  * Пока не получится загрузить ctx.session.user, бот работать не будет */
 bot.use(async (ctx, next) => {
 	if (!ctx.session.user) {
-		if (!ctx.message) return await next();
-		let user = await findUser({id: ctx.message.from.id});
+		let msgFrom;
+		// В зависимости от типа входящего сообщения, данные о пользователе могут находиться в разных местах
+		if (ctx.updateType === 'message') msgFrom = ctx.message.from;
+		else if (ctx.updateType === 'callback_query') msgFrom = ctx.update.callback_query.from;
+		else {
+			console.log('Не удается найти информацию о пользователе в контексте');
+			console.log('updateType: ', ctx.updateType);
+			return;
+		}
+
+		let user = await findUser({id: msgFrom.id});
 		if (user instanceof Error) return ctx.reply(user.message);
 
 		// Данный пользователь уже есть в БД, выгружаем его данные
@@ -37,14 +46,13 @@ bot.use(async (ctx, next) => {
 
 		// Данного пользователя еще нету в БД, сохраняем его
 		else {
-			let {from} = ctx.message;
 			user = {
-				id: from.id,
-				firstName: from.first_name,
-				lastName: from.last_name || null,
-				username: from.username || null,
-				isBot: from.is_bot,
-				language: from.language_code || null,
+				id: msgFrom.id,
+				firstName: msgFrom.first_name,
+				lastName: msgFrom.last_name || null,
+				username: msgFrom.username || null,
+				isBot: msgFrom.is_bot,
+				language: msgFrom.language_code || null,
 				createdAt: Date.now(),
 				lastUseAt: Date.now()
 			}
