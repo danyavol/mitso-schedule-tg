@@ -10,7 +10,6 @@ module.exports = selectWeek;
 selectWeek.enter(async (ctx) => {
 	let keyboard = [],
 		group, title, archive = false, archiveTitle;
-
 	switch (ctx.session.sceneType) {
 		case "mySchedule":
 			group = ctx.session.user.myGroup.group;
@@ -28,6 +27,16 @@ selectWeek.enter(async (ctx) => {
 			break;
 		case "teacherScheduleArchive":
 			title = 'teacherSchedule-';
+			archive = true;
+			break;
+		case "otherSchedule":
+			group = ctx.session.selectedGroup;
+			title = 'otherSchedule-';
+			archiveTitle = 'otherSchedule-archive';
+			break;
+		case "otherScheduleArchive":
+			group = ctx.session.selectedGroup;
+			title = 'otherSchedule-';
 			archive = true;
 			break;
 	}

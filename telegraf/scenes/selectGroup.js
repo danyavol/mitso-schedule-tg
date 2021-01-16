@@ -11,14 +11,17 @@ module.exports = selectGroup;
 
 selectGroup.enter((ctx) => {
 	deleteLastMessage(ctx);
+	let msg;
+	if (ctx.session.sceneType === 'otherSchedule') msg = '💬 Введи номер группы, расписание которой хочешь посмотреть';
 	ctx.reply(
-		'💬 Введи номер группы',
+		msg || '💬 Введи номер группы',
 		Markup.keyboard([
 			['↩ На главную'],
 		]).resize().extra());
 });
 
 selectGroup.hears(/(главн|меню)/i, (ctx) => {
+	delete ctx.session.sceneType;
 	ctx.scene.leave();
 });
 
@@ -61,15 +64,11 @@ selectGroup.action(/selectGroup-/, async (ctx) => {
 			ctx.session.user = newUser;
 			ctx.state.msg = `💾 Твоя группа *${selectedGroup.group}* успешно сохранена!`;
 		}
-	} else {
-		ctx.state.msg = `Выбранная группа - _${selectedGroup.group}_`;
+		ctx.scene.leave();
+	} else if (ctx.session.sceneType === 'otherSchedule') {
+		ctx.session.selectedGroup = selectedGroup.group;
+		ctx.scene.enter('selectWeek');
 	}
-
-	// Удаление ненужных переменных
-	delete ctx.session.foundGroups;
-	delete ctx.session.sceneType;
-
-	ctx.scene.leave();
 });
 
 selectGroup.on('message', (ctx) => {
@@ -79,5 +78,11 @@ selectGroup.on('message', (ctx) => {
 
 selectGroup.leave((ctx) => {
 	deleteLastMessage(ctx);
-	ctx.replyWithMarkdown(ctx.state.msg || '〽 *Главное меню*', mainMenuKeyboard(ctx));
+	delete ctx.session.foundGroups;
+
+	if (ctx.session.sceneType !== 'otherSchedule') {
+		delete ctx.session.sceneType;
+
+		ctx.replyWithMarkdown(ctx.state.msg || '〽 *Главное меню*', mainMenuKeyboard(ctx));
+	}
 });
