@@ -2,6 +2,7 @@ const repeatFunction = require('../components/repeatFunction');
 
 const saveAllSchedule = require('./saveAllSchedule/index');
 const checkBalance = require('./checkBalance/index');
+const checkSchedule = require('./checkSchedule/index');
 
 module.exports = async (bot) => {
 
@@ -10,4 +11,6 @@ module.exports = async (bot) => {
 
 	// Проверка баланса пользователей, которые включили уведомления. Каждый час в 5 минут
 	repeatFunction(() => checkBalance(bot), {h:1}, {m:5});
+
+	//checkSchedule();
 }
