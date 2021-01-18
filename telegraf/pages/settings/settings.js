@@ -65,7 +65,7 @@ settings.action(/settings-/, async (ctx) => {
 		});
 	} catch (e) {
 		// Произойдет ошибка, если новая клавиатура идентична старой
-		// console.log(e);
+		// console.error(e);
 	} finally {
 		// Вывод алерта с подробностями об изменении
 		await ctx.answerCbQuery(alertText, true);

@@ -15,7 +15,7 @@ module.exports = async function sendScheduleRequest(link) {
 			})
 			.catch(reason => {
 				rejectedCount++;
-				console.log(rejectedCount, 'Request error');
+				console.error(rejectedCount, 'Request error');
 				rej();
 				//console.log(reason);
 			})

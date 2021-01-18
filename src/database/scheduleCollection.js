@@ -25,7 +25,7 @@ module.exports.saveSchedule = async (schedule) => {
 
 		await Promise.all(promiseArray);
 	} catch (e) {
-		console.log('Error saving schedule!', e);
+		console.error('Error saving schedule!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
@@ -62,7 +62,7 @@ module.exports.getAvailableWeeks = async (group, archive=false) => {
 			return (+a.collection) - (+b.collection);
 		});
 	} catch (e) {
-		console.log('Error getting available weeks!', e);
+		console.error('Error getting available weeks!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
@@ -80,7 +80,7 @@ module.exports.getWeekSchedule = async (group, collectionName) => {
 
 		schedule = await collection.findOne({group: group});
 	} catch (e) {
-		console.log('Error getting week schedule!', e);
+		console.error('Error getting week schedule!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
@@ -100,7 +100,7 @@ module.exports.getDaySchedule = async (group, collectionName, date) => {
 		if (schedule && schedule.lessons && date)
 			schedule.lessons = schedule.lessons.filter(item => item.date === date);
 	} catch (e) {
-		console.log('Error getting day schedule!', e);
+		console.error('Error getting day schedule!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
@@ -144,7 +144,7 @@ module.exports.getTeacherSchedule = async (teacherName, collectionName) => {
 			}
 		}
 	} catch (e) {
-		console.log('Error getting teacher schedule!', e);
+		console.error('Error getting teacher schedule!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();

@@ -13,7 +13,7 @@ module.exports.saveUser = async (userData, updateLastUse=false) => {
 		await User.updateOne({id: userData.id}, savedUser, {upsert: true});
 
 	} catch (e) {
-		console.log('Error saving user data!', e);
+		console.error('Error saving user data!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
@@ -29,7 +29,7 @@ module.exports.deleteUser = async (tgId) => {
 		await conn.collection('users').deleteOne({id: tgId});
 
 	} catch (e) {
-		console.log('Error deleting user!', e);
+		console.error('Error deleting user!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
@@ -45,7 +45,7 @@ module.exports.findUser = async (query) => {
 
 		foundUser = await User.findOne(query).exec();
 	} catch (e) {
-		console.log('Error finding user data!', e);
+		console.error('Error finding user data!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
@@ -60,7 +60,7 @@ module.exports.getAllUsers = async () => {
 
 		foundUsers = await conn.collection('users').find().toArray();
 	} catch (e) {
-		console.log('Error finding user data!', e);
+		console.error('Error finding user data!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();

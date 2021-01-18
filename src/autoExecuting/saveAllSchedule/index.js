@@ -38,7 +38,7 @@ module.exports = async function saveAllSchedule() {
 	}
 	await Promise.all(promiseArray)
 		.then(response => SCHEDULE = response)
-		.catch(err => console.log('Promise all error', err));
+		.catch(err => console.error('Promise all error', err));
 	/** End Step 2 */
 
 	console.log('Добавляем данные в БД... ', timeStamp());

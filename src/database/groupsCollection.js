@@ -17,7 +17,7 @@ module.exports.saveGroups = async (groups) => {
 		});
 		await Promise.all(promiseArray);
 	} catch (e) {
-		console.log('Error saving groups!', e);
+		console.error('Error saving groups!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
@@ -30,7 +30,7 @@ module.exports.findGroup = async (groupName) => {
 		conn = await mongoose.createConnection(process.env.DB_URI+'/data', {useNewUrlParser: true, useUnifiedTopology: true});
 		group = await conn.collection('groups').find({group: {$regex: groupName, $options: "i"}} ).toArray();
 	} catch (e) {
-		console.log('Error finding group!', e);
+		console.error('Error finding group!', e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();

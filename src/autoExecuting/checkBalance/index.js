@@ -40,7 +40,7 @@ module.exports = async (bot) => {
 	let changedBalance = [];
 	for (let balance of allBalance) {
 		if (balance.error) {
-			console.log('Error getting balance!', balance.text);
+			console.error('Error getting balance!', balance.text);
 			continue;
 		}
 		for (let user of users) {

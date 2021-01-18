@@ -113,7 +113,7 @@ function sendLinkRequest(link, type='', fak='', form='', kurse='', group='') {
 			resolve();
 		})
 		.catch((reason) => {
-			console.log(reason);
+			console.error(reason);
 			resolve();
 		});
 	});
