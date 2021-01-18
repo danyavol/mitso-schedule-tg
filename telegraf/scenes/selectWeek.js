@@ -53,7 +53,7 @@ selectWeek.enter(async (ctx) => {
 	if (!archive) keyboard.push([Markup.callbackButton('📂 Предыдущие недели', archiveTitle)]);
 
 
-	ctx.replyWithMarkdown(`📅 Выбери нужную неделю${archive ? '\n\n_Отображается дата начала недели, понедельник_' : ''}`,
+	ctx.replyWithMarkdown(`📅 Выбери нужную неделю${archive ? '\n\n_Отображается дата начала недели, понедельник_' : (weeks.length ? '' : '\n\n_Актуальные недели не найдены_')}`,
 		Markup.inlineKeyboard(keyboard).extra())
 	.then(msg => {
 		deleteLastMessage(ctx, msg.message_id);

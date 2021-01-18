@@ -15,12 +15,14 @@ mySchedule.hears(/добавить мою группу/i, (ctx) => {
 });
 
 mySchedule.hears(/неделя/i, (ctx) => {
+	if (!ctx.session.user.myGroup.group) return;
 	ctx.session.sceneType = "mySchedule";
 	ctx.session.archive = false;
 	ctx.scene.enter('selectWeek');
 });
 
 mySchedule.hears(/(сегодня|завтра)/i, async (ctx) => {
+	if (!ctx.session.user.myGroup.group) return;
 	let dayIncrement = 0;
 	if (/завтра/i.test(ctx.message.text)) dayIncrement = 1;
 
