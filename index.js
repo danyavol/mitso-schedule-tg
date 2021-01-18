@@ -24,24 +24,14 @@ bot.use(session());
  * Пока не получится загрузить ctx.session.user, бот работать не будет */
 bot.use(async (ctx, next) => {
 	if (!ctx.session.user) {
-		let msgFrom;
-		// В зависимости от типа входящего сообщения, данные о пользователе могут находиться в разных местах
-		if (ctx.updateType === 'message') msgFrom = ctx.message.from;
-		else if (ctx.updateType === 'callback_query') msgFrom = ctx.update.callback_query.from;
-		else {
-			console.log('Не удается найти информацию о пользователе в контексте');
-			console.log('updateType: ', ctx.updateType);
-			return;
-		}
+		let msgFrom = getMsgFrom(ctx);
 
 		let user = await findUser({id: msgFrom.id});
 		if (user instanceof Error) return ctx.reply(user.message);
 
 		// Данный пользователь уже есть в БД, выгружаем его данные
 		if (user) {
-			user.lastUseAt = Date.now();
 			ctx.session.user = user;
-			saveUser(user);
 		}
 
 		// Данного пользователя еще нету в БД, сохраняем его
@@ -61,12 +51,27 @@ bot.use(async (ctx, next) => {
 			ctx.session.user = user;
 		}
 	}
-	// Обновление lastUseAt
-	if (Date.now() - ctx.session.user.lastUseAt.getTime() >= 1000*60*60) {
+	// Обновление данных пользователя не чаще чем раз в 10 минут
+	if (Date.now() - ctx.session.user.lastUseAt.getTime() >= 1000*60*10) {
+		let msgFrom = getMsgFrom(ctx);
+		ctx.session.user.firstName = msgFrom.first_name;
+		ctx.session.user.lastName = msgFrom.last_name || null;
+		ctx.session.user.username = msgFrom.username || null;
+		ctx.session.user.language = msgFrom.language_code || null;
 		saveUser(ctx.session.user, true);
 	}
 	await next();
 });
+
+function getMsgFrom(ctx) {
+	// В зависимости от типа входящего сообщения, данные о пользователе могут находиться в разных местах
+	if (ctx.updateType === 'message') return ctx.message.from;
+	else if (ctx.updateType === 'callback_query') return ctx.update.callback_query.from;
+	else {
+		console.error('Не удается найти информацию о пользователе в контексте');
+		console.log('updateType: ', ctx.updateType);
+	}
+}
 
 /** Stage middleware */
 const Stage = require('telegraf/stage');
