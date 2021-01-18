@@ -232,7 +232,7 @@ module.exports.selectDay = (dayIncrement=0) => {
 };
 
 /** Возвращает дату занятия */
-module.exports.getDate = (date, time) => {
+module.exports.getDate = (date, time="8:00-9:20") => {
 	date = 	date.split(' ');
 	time = time.split('-')[0].split(':');
 

@@ -12,5 +12,6 @@ module.exports = async (bot) => {
 	// Проверка баланса пользователей, которые включили уведомления. Каждый час в 5 минут
 	repeatFunction(() => checkBalance(bot), {h:1}, {m:5});
 
-	//checkSchedule();
+	// Проверка расписания пользователей, которые включили уведомления. Каждые 15 минут
+	repeatFunction(() => checkSchedule(bot), {m:15}, {m:0});
 }
