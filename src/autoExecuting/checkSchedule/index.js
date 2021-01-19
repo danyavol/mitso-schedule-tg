@@ -138,5 +138,6 @@ module.exports = async (bot) => {
 
 
 	let time = ((Date.now() - start.getTime())/1000).toFixed(1);
-	console.log(`Проверка расписания окончена. Времени прошло - ${time}сек\nГрупп обновилось - ${GROUPS.length}. Сообщений отправлено - ${messages.length}`);
+	if (GROUPS.length)
+		console.log(`Проверка расписания окончена. Времени прошло - ${time}сек\nГрупп обновилось - ${GROUPS.length}. Сообщений отправлено - ${messages.length}`);
 };

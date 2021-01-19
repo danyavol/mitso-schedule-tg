@@ -20,8 +20,6 @@ module.exports = async function saveAllSchedule() {
 	const links = await createLinks();
 	/** End Step 1 */
 
-	console.log('Ссылки созданы. Отправляем запросы... ', timeStamp());
-
 	/** Step 2 */
 	let SCHEDULE = [];
 
@@ -41,12 +39,9 @@ module.exports = async function saveAllSchedule() {
 		.catch(err => console.error('Promise all error', err));
 	/** End Step 2 */
 
-	console.log('Добавляем данные в БД... ', timeStamp());
-
 	/** Step 3 */
-	console.log('SCHEDULE.length '+SCHEDULE.length);
 	await saveSchedule(SCHEDULE);
 	/** End Step 3 */
 
-	console.log('Сохранение расписания окончено... ', timeStamp());
+	console.log(`Сохранение расписания окончено... Недель сохранено - ${SCHEDULE.length}`, timeStamp());
 }
