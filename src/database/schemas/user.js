@@ -10,9 +10,13 @@ module.exports = new Schema({
 		group: String,
 		url: String
 	},
-	// additionalGroups: [
-	//
-	// ],
+	dayScheduleTime: [
+		{
+			time: String,
+			hours: Number,
+			minutes: Number
+		}
+	],
 	balance: {
 		number: Number,
 		balance: Number,

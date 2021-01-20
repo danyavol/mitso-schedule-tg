@@ -56,6 +56,11 @@ selectGroup.action(/selectGroup-/, async (ctx) => {
 	if (ctx.session.sceneType === 'mySchedule') {
 		let userData = JSON.parse(JSON.stringify(ctx.session.user));
 		userData.myGroup = selectedGroup;
+		// Уведомления по умолчанию
+		if (!userData.notifications) userData.notifications = {};
+		userData.notifications.scheduleChange = false;
+		userData.notifications.daySchedule = false;
+
 
 		let newUser = await saveUser(userData, true);
 		if (newUser instanceof Error) {

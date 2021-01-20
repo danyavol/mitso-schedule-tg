@@ -41,12 +41,21 @@ settings.action(/settings-/, async (ctx) => {
 		case 'settings-dayScheduleNotif':
 			if (ctx.session.user.notifications.daySchedule) {
 				ctx.session.user.notifications.daySchedule = false;
-				alertText = '💔 Бот больше не будет присылать расписание на день';
+				alertText = '🔇 Бот больше не будет присылать расписание на день';
 			} else {
 				ctx.session.user.notifications.daySchedule = true;
-				alertText = 'Бот будет присылать расписание на день';
+				if (!ctx.session.user.dayScheduleTime || !ctx.session.user.dayScheduleTime.length) {
+					ctx.session.user.dayScheduleTime = [{time: 'relatively', hours: 2, minutes: 0}];
+					await saveUser(ctx.session.user, true);
+					alertText = '🔊 Бот будет присылать расписание на день за 2 часа до занятий.\n\nДля настройки времени выбери соответсвующий пункт в настройках';
+				} else {
+					alertText = '🔊 Бот будет присылать расписание на день.\n\nДля настройки времени уведомлений выбери соответсвующий пункт в настройках';
+				}
 			}
 			break;
+		case 'settings-changeDayScheduleTime':
+			deleteLastMessage(ctx);
+			return ctx.scene.enter('daySchedule');
 		case 'settings-changeMyGroup':
 			deleteLastMessage(ctx);
 			ctx.session.sceneType = "mySchedule";
@@ -85,9 +94,14 @@ function createKeyboard(ctx) {
 	if (user.balance && user.balance.number)
 		keyboard.push( [Markup.callbackButton(`${notif.balanceChange ? '🔔' : '🔕'} Уведомлять об изменении баланса`, 'settings-balanceChangeNotif')] );
 
-	//keyboard.push( [Markup.callbackButton(`${notif.daySchedule ? '🔔' : '🔕'} Присылать расписание на день`, 'settings-dayScheduleNotif')] );
+	if (user.myGroup.group)
+		keyboard.push( [Markup.callbackButton(`${notif.daySchedule ? '🔔' : '🔕'} Присылать расписание на день`, 'settings-dayScheduleNotif')] );
 
 	/** Настройки */
+	// Изменить мою группу
+	if (user.myGroup.group && notif.daySchedule)
+		keyboard.push( [Markup.callbackButton(`⏰ Настроить расписание на день`, 'settings-changeDayScheduleTime')] );
+
 	// Изменить мою группу
 	if (user.myGroup.group)
 		keyboard.push( [Markup.callbackButton(`📝 Изменить мою группу`, 'settings-changeMyGroup')] );

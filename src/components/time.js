@@ -186,7 +186,7 @@ function selectWeek (weekIncrement = 0, currentDate) {
 /** Возвращает день, расписание на который пользователь хочет получить
  *
  * input -> dayIncrement (0 сегодня, 1 завтра, 2 послезавтра, -1 вчера, -2 позавчера)
- * output -> {date: '19 октября', day: 'завтра', collection: '20201019'}
+ * output -> {date: '19 октября', day: 'завтра', dayOfWeek: 3, collection: '20201019'}
  */
 module.exports.selectDay = (dayIncrement=0) => {
 	const final = {};
