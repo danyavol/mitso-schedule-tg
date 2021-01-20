@@ -90,7 +90,7 @@ module.exports = async (bot) => {
 					noticeTime = getExactlyNoticeTime(time.hours, time.minutes);
 
 					// Если время уведомления уже больше чем время первой пары, то пробуем подставить завтрашний день
-					if (lessonTime - noticeTime < 0) {
+					if (lessonTime < noticeTime) {
 						if (group.tomorrow && group.tomorrow.length) {
 							lessonTime = getDate(group.tomorrow[0].date, group.tomorrow[0].time);
 							dayIncrement = 1;
@@ -99,7 +99,7 @@ module.exports = async (bot) => {
 					}
 
 					// Если время до пары > 24ч, то игнорируем это уведомление
-					if (lessonTime - noticeTime > 1000*60*60*24) break; // если время до пары > 24ч
+					if (lessonTime - noticeTime > 1000*60*60*24 || lessonTime < noticeTime) break; // если время до пары > 24ч
 				}
 
 
