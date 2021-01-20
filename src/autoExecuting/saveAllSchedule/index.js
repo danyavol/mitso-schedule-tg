@@ -43,5 +43,5 @@ module.exports = async function saveAllSchedule() {
 	await saveSchedule(SCHEDULE);
 	/** End Step 3 */
 
-	console.log(`Сохранение расписания окончено... Недель сохранено - ${SCHEDULE.length}`, timeStamp());
+	console.log(`Сохранение расписания окончено... Недель сохранено - ${SCHEDULE.length}...`, timeStamp());
 }

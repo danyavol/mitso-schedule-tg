@@ -64,7 +64,7 @@ module.exports = async function createLinks(weekNumber) {
 		});
 	});
 	await Promise.all(promiseArray);
-	console.log('Итого запросов было отправлено - ', requestCounter);
+	//console.log('Итого запросов было отправлено - ', requestCounter);
 	// Итоговое составление ссылок
 	let groupsList = []; // список всех групп университета, которые есть в расписании
 	let outputLinks = {}; // ссылки по которым нужно отправлять запрос на получение расписания
