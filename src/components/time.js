@@ -264,6 +264,8 @@ module.exports.getDate = (date, time="8:00-9:20") => {
 	now.setDate(+date[0]);
 	now.setHours(time[0]);
 	now.setMinutes(time[1]);
+	now.setSeconds(0);
+	now.setMilliseconds(0);
 
 	return now.getTime();
 };

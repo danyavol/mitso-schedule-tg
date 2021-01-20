@@ -65,7 +65,7 @@ module.exports = async (bot) => {
 				} else if (group.tomorrow && group.tomorrow.length) {
 					lessonTime = getDate(group.tomorrow[0].date, group.tomorrow[0].time);
 					dayIncrement = 1;
-				} else break;
+				} else continue;
 
 
 				/** Определяем дату уведомления */
@@ -82,7 +82,7 @@ module.exports = async (bot) => {
 							lessonTime = getDate(group.tomorrow[0].date, group.tomorrow[0].time);
 							dayIncrement = 1;
 							noticeTime = lessonTime - indent;
-						} else break;
+						} else continue;
 					}
 				}
 				/** Если тип времени - exactly */
@@ -95,11 +95,11 @@ module.exports = async (bot) => {
 							lessonTime = getDate(group.tomorrow[0].date, group.tomorrow[0].time);
 							dayIncrement = 1;
 						}
-						else break;
+						else continue;
 					}
 
 					// Если время до пары > 24ч, то игнорируем это уведомление
-					if (lessonTime - noticeTime > 1000*60*60*24 || lessonTime < noticeTime) break; // если время до пары > 24ч
+					if (lessonTime - noticeTime > 1000*60*60*24 || lessonTime < noticeTime) continue; // если время до пары > 24ч
 				}
 
 
@@ -113,11 +113,8 @@ module.exports = async (bot) => {
 				let timeout = setTimeout(() => sendBulkMessage(bot, [{userId: user.id, msg: msg}]), noticeTime - now);
 				timeoutsArray.push(timeout);
 
-console.log(`--- Расписание на день для ${user.id}
-	Первая пара ${dayIncrement ? 'завтра - '+group.tomorrow[0].date+', '+group.tomorrow[0].time : 'сегодня - '+group.today[0].date+', '+group.today[0].time}
-	Уведомление - ${time.time}, ${time.hours}:${time.minutes}
-	Будет отправлено через ${((noticeTime - now)/(1000*60*60)).toFixed(2)} часов\n`);
-
+console.log(`--- Расписание на день для ${user.id} - ${time.time}, ${time.hours}:${time.minutes < 10 ? '0'+time.minutes : time.minutes}
+	${dayIncrement ? 'Завтра пара в '+group.tomorrow[0].time.split('-')[0] : 'Сегодня пара в '+group.today[0].time.split('-')[0]}. Уведомление через ${((noticeTime - now)/(1000*60*60)).toFixed(2)} часов`);
 			}
 		}
 	}
