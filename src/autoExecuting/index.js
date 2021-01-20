@@ -3,6 +3,7 @@ const repeatFunction = require('../components/repeatFunction');
 const saveAllSchedule = require('./saveAllSchedule/index');
 const checkBalance = require('./checkBalance/index');
 const checkSchedule = require('./checkSchedule/index');
+const sendDaySchedule = require('./sendDaySchedule/index');
 
 module.exports = async (bot) => {
 
@@ -14,4 +15,12 @@ module.exports = async (bot) => {
 
 	// Проверка расписания пользователей, которые включили уведомления. Каждые 15 минут
 	repeatFunction(() => checkSchedule(bot), {m:15}, {m:0});
+
+	// Отправка расписания на день. Перепроверка уведомлений каждый час
+	let timeouts = [];
+	repeatFunction(async () => {
+		for (let timeout of timeouts) clearTimeout(timeout);
+		timeouts = await sendDaySchedule(bot);
+		console.log('Создалось ' + timeouts.length + ' таймаута с расписанием на день');
+	}, {h:1});
 }

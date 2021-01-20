@@ -1,16 +1,19 @@
 /** Возвращает текущее время по Минской временной зоне */
 module.exports.timeStamp = () => {
-	const timeZoneUTC = 3;
-
-	let now = new Date();
-
-	// Проверка временной зоны UTC
-	if (now.getTimezoneOffset() / 60 !== -timeZoneUTC) {
-		let offset = timeZoneUTC * 60 + now.getTimezoneOffset()
-		now = new Date(now.getTime() + offset*1000*60);
-	}
+	let now = getMinskDate()
 
 	return `${now.getHours()}h ${now.getMinutes()}min ${now.getSeconds()}s ${now.getMilliseconds()}ms`;
+}
+
+module.exports.getMinskDate = getMinskDate;
+function  getMinskDate () {
+	const timeZone = 3;
+	let now = new Date();
+	if (now.getTimezoneOffset() / 60 !== -timeZone) {
+		let offset = timeZone * 60 + now.getTimezoneOffset();
+		now = new Date(now.getTime() + offset*1000*60);
+	}
+	return now;
 }
 
 
@@ -252,7 +255,7 @@ module.exports.getDate = (date, time="8:00-9:20") => {
 		case 'декабр': date[1] = 12; break;
 	}
 
-	let now = new Date();
+	let now = getMinskDate();
 
 	if (date[1] > 9 && now.getMonth() < 3) now.setFullYear(now.getFullYear()-1);
 	else if (date[1] < 3 && now.getMonth() > 9) now.setFullYear(now.getFullYear()+1);

@@ -51,7 +51,7 @@ daySchedule.hears(/\d{1,2}:\d{2}/i, async (ctx) => {
 	let minutes = parseInt(timeString.split(':')[1]);
 
 	// Проверка ограничений
-	if (hours > 24 || minutes > 60) return replyWithSavedTime(ctx, '⚠ *Неверный формат времени. Попробуй еще раз.*' + MESSAGE);
+	if (hours >= 24 || minutes >= 60) return replyWithSavedTime(ctx, '⚠ *Неверный формат времени. Попробуй еще раз.*' + MESSAGE);
 	if (ctx.session.user.dayScheduleTime.length >= 4) return replyWithSavedTime(ctx, '⚠ *Максимальное количество напоминаний - 4.*');
 
 	// Проверка есть ли уже такое время

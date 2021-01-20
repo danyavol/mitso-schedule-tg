@@ -35,23 +35,24 @@ module.exports.weekSchedule = (lessons, firstTitle, secondTitle, writeGroup=fals
 };
 
 // dayInfo = {date: '19 октября', day: 'завтра', collection: '20201019'}
-module.exports.daySchedule = (lessons, dayIncrement, dayInfo) => {
+module.exports.daySchedule = (lessons, dayIncrement, dayInfo, showWhichDay = true) => {
 	let msg = '📚 ';
 	// Расписание имеется
 	if (lessons && lessons.length) {
 		msg += `Расписание ${lessons[0].group} `;
-		if (dayInfo.day) msg += `на ${dayInfo.day}\n`;
-		else {
-			if (dayIncrement > 0) {
-				dayIncrement < 5 ?
-					msg += `через ${Math.abs(dayIncrement)-1} дня\n` :
-					msg += `через ${Math.abs(dayIncrement)-1 } дней\n`;
-			} else {
-				dayIncrement > -5 ?
-					msg += `${Math.abs(dayIncrement)} дня назад\n` :
-					msg += `${Math.abs(dayIncrement)} дней назад\n`;
+		if (showWhichDay)
+			if (dayInfo.day) msg += `на ${dayInfo.day}\n`;
+			else {
+				if (dayIncrement > 0) {
+					dayIncrement < 5 ?
+						msg += `через ${Math.abs(dayIncrement)-1} дня\n` :
+						msg += `через ${Math.abs(dayIncrement)-1 } дней\n`;
+				} else {
+					dayIncrement > -5 ?
+						msg += `${Math.abs(dayIncrement)} дня назад\n` :
+						msg += `${Math.abs(dayIncrement)} дней назад\n`;
+				}
 			}
-		}
 
 		msg += `\n📍 ${lessons[0].day}, ${longToShortDate(lessons[0].date)}\n`;
 		lessons.map(ls => {
