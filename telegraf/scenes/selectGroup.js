@@ -58,7 +58,7 @@ selectGroup.action(/selectGroup-/, async (ctx) => {
 		userData.myGroup = selectedGroup;
 		// Уведомления по умолчанию
 		let notif = userData.notifications;
-		if (!notif) userData.notifications = {};
+		if (!notif) notif = {};
 		if (notif.scheduleChange == null) notif.scheduleChange = false;
 		if (notif.daySchedule == null) notif.daySchedule = false;
 
@@ -68,7 +68,7 @@ selectGroup.action(/selectGroup-/, async (ctx) => {
 			ctx.state.msg = newUser;
 		} else {
 			ctx.session.user = newUser;
-			ctx.state.msg = `💾 Твоя группа *${selectedGroup.group}* успешно сохранена!`;
+			ctx.state.msg = `✅ Твоя группа *${selectedGroup.group}* успешно сохранена!`;
 		}
 		ctx.scene.leave();
 	} else if (ctx.session.sceneType === 'otherSchedule') {

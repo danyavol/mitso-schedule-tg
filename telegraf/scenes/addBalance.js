@@ -37,7 +37,7 @@ addBalance.hears(/\d{3,10}/, async (ctx) => {
 		ctx.state.msg = '❌ Не удалось сохранить номер в базу данных. Попробуй позже.';
 	} else {
 		ctx.session.user = savedUser;
-		ctx.state.msg = '✅ Номер лицевого счета сохранен.';
+		ctx.state.msg = '✅ Номер лицевого счета сохранен!';
 	}
 
 	ctx.scene.leave();
