@@ -21,6 +21,5 @@ module.exports = async (bot) => {
 	repeatFunction(async () => {
 		for (let timeout of timeouts) clearTimeout(timeout);
 		timeouts = await sendDaySchedule(bot);
-		console.log('Создалось ' + timeouts.length + ' таймаута с расписанием на день');
 	}, {h:1});
 }

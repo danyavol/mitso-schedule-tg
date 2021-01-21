@@ -113,8 +113,8 @@ module.exports = async (bot) => {
 				let timeout = setTimeout(() => sendBulkMessage(bot, [{userId: user.id, msg: msg}]), noticeTime - now);
 				timeoutsArray.push(timeout);
 
-console.log(`--- Расписание на день для ${user.id} - ${time.time}, ${time.hours}:${time.minutes < 10 ? '0'+time.minutes : time.minutes}
-	${dayIncrement ? 'Завтра пара в '+group.tomorrow[0].time.split('-')[0] : 'Сегодня пара в '+group.today[0].time.split('-')[0]}. Уведомление через ${((noticeTime - now)/(1000*60*60)).toFixed(2)} часов`);
+// console.log(`--- Расписание на день для ${user.id} - ${time.time}, ${time.hours}:${time.minutes < 10 ? '0'+time.minutes : time.minutes}
+// 	${dayIncrement ? 'Завтра пара в '+group.tomorrow[0].time.split('-')[0] : 'Сегодня пара в '+group.today[0].time.split('-')[0]}. Уведомление через ${((noticeTime - now)/(1000*60*60)).toFixed(2)} часов`);
 			}
 		}
 	}
