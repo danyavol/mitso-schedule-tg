@@ -99,6 +99,5 @@ module.exports = async (bot) => {
 	/** 6 */
 	sendBulkMessage(bot, sendArray);
 
-	if (sendArray.length)
-		console.log('Проверка баланса пользователей. Есть изменения', sendArray);
+	if (sendArray.length) console.log(`У ${sendArray.length} пользователей есть изменения в балансе.`);
 };
