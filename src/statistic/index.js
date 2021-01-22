@@ -30,12 +30,14 @@ module.exports = async (ctx) => {
 	msg += `_1 курс_  -  *${(courses[1]/sumCourses*100).toFixed(0)}%*          _3 курс_  -  *${(courses[3]/sumCourses*100).toFixed(0)}%*\n`;
 	msg += `_2 курс_  -  *${(courses[2]/sumCourses*100).toFixed(0)}%*          _4 курс_  -  *${(courses[4]/sumCourses*100).toFixed(0)}%*\n\n`;
 
-	msg += `💰 _Пользуется балансом_  -  *${(users.filter(u => u.balance && u.balance.number).length/users.length*100).toFixed(0)}%*\n\n`;
+	let usersWithBalance = users.filter(u => u.balance && u.balance.number);
+	let usersWithMyGroup = users.filter(u => u.myGroup && u.myGroup.group);
+	msg += `💰 _Пользуется балансом_  -  *${(usersWithBalance.length/users.length*100).toFixed(0)}%*\n\n`;
 
 	msg += `🔊 Включены уведомления:\n`;
-	msg += `• _об изменении баланса_  -  *${(users.filter(u => u.notifications && u.notifications.balanceChange).length/users.length*100).toFixed(0)}%*\n`;
-	msg += `• _об изменении расписания_  -  *${(users.filter(u => u.notifications && u.notifications.scheduleChange).length/users.length*100).toFixed(0)}%*\n`;
-	msg += `• _расписание на день_  -  *${(users.filter(u => u.notifications && u.notifications.daySchedule).length/users.length*100).toFixed(0)}%*\n`;
+	msg += `• _об изменении баланса_  -  *${(usersWithBalance.filter(u => u.notifications && u.notifications.balanceChange).length/usersWithBalance.length*100).toFixed(0)}%*\n`;
+	msg += `• _об изменении расписания_  -  *${(usersWithMyGroup.filter(u => u.notifications && u.notifications.scheduleChange).length/usersWithMyGroup.length*100).toFixed(0)}%*\n`;
+	msg += `• _расписание на день_  -  *${(usersWithMyGroup.filter(u => u.notifications && u.notifications.daySchedule).length/usersWithMyGroup.length*100).toFixed(0)}%*\n`;
 
 	ctx.replyWithMarkdown(msg);
 };
