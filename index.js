@@ -82,6 +82,7 @@ stage.register(require('./telegraf/scenes/addBalance'));
 stage.register(require('./telegraf/scenes/selectWeek'));
 stage.register(require('./telegraf/scenes/showTeacherSchedule'));
 stage.register(require('./telegraf/scenes/dayScheduleTime'));
+stage.register(require('./telegraf/scenes/mitsoSearch'));
 
 bot.use(stage.middleware());
 /** End Stage middleware */

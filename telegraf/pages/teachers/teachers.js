@@ -8,6 +8,7 @@ module.exports = teachers;
 teachers.hears(/преподаватели/i,async (ctx) => {
 	let keyboard = [];
 	keyboard.push( [Markup.callbackButton('📚 Расписание преподавателя', `teachers-schedule`)] );
+	keyboard.push( [Markup.callbackButton('🔎 Поиск на сайте', `mitso-search`)] );
 
 	await ctx.replyWithMarkdown('👨🏻‍🎓 Меню преподавателей', Markup.inlineKeyboard(keyboard).extra())
 		.then(msg => deleteLastMessage(ctx, msg.message_id));
@@ -30,4 +31,8 @@ teachers.action(/teacherSchedule-/, (ctx) => {
 	let collection = data.split('-')[1];
 	ctx.session.selectedWeek = collection;
 	ctx.scene.enter('showTeacherSchedule');
+});
+
+teachers.action(/mitso-search/, (ctx) => {
+	ctx.scene.enter('mitsoSearch');
 });
