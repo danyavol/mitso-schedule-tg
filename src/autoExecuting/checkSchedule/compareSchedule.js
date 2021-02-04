@@ -27,7 +27,10 @@ module.exports = (groups) => {
 				}
 
 			}
-			if (flag) newWeeksCounter++;
+			if (flag) {
+				newWeeksCounter++;
+				groups[i].changes.push({ week: groups[i].mitsoSch[j][0].week })
+			}
 		}
 
 		// Появились новые недели
