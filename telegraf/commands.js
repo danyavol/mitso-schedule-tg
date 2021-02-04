@@ -20,7 +20,7 @@ bot.help((ctx) => {
 		'\n_Бот находится в разработке, некоторые функции могут быть недоступны._');
 });
 
-bot.command('statistic', require('../src/statistic/index'));
+bot.command('stats', require('../src/statistic/index'));
 
 bot.hears(/(меню|главн)/i, (ctx) => {
 	ctx.replyWithMarkdown('〽 *Главное меню*', mainMenuKeyboard(ctx));
