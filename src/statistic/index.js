@@ -7,12 +7,13 @@ module.exports = async (ctx) => {
 	let users = await getAllUsers();
 
 	msg += `_Количество пользователей_  -  *${users.length}*\n`;
-	msg += `✅ _Активные пользователи_  -  *${users.filter(u => Date.now() - u.lastUseAt.getTime() < 1000*60*60*24*7).length}*\n`; // Последняя активность менее недели назад
+	msg += `✅ _Активные пользователи_  -  *${users.filter(u => (u.myGroup || u.balance) && Date.now() - u.lastUseAt.getTime() < 1000*60*60*24*7).length}*\n`; // Последняя активность менее недели назад
 	msg += `🚫 _Абсолютный неактив_  -  *${users.filter(u => !u.myGroup && !u.balance).length}*\n\n`
 
 	msg += `📈 Новых пользователей:\n`
 	msg += `• _за месяц_  -  *${users.filter(u => Date.now() - u.createdAt.getTime() < 1000*60*60*24*30).length}*\n`;
-	msg += `• _за неделю_  -  *${users.filter(u => Date.now() - u.createdAt.getTime() < 1000*60*60*24*7).length}*\n\n`;
+	msg += `• _за неделю_  -  *${users.filter(u => Date.now() - u.createdAt.getTime() < 1000*60*60*24*7).length}*\n`;
+	msg += `• _за день_  -  *${users.filter(u => Date.now() - u.createdAt.getTime() < 1000*60*60*24).length}*\n\n`;
 
 	/** Подсчет количества людей на курсах */
 	let courses = {'1': 0, '2': 0, '3': 0, '4': 0};
@@ -37,7 +38,7 @@ module.exports = async (ctx) => {
 	msg += `🔊 Включены уведомления:\n`;
 	msg += `• _об изменении баланса_  -  *${(usersWithBalance.filter(u => u.notifications && u.notifications.balanceChange).length/usersWithBalance.length*100).toFixed(0)}%*\n`;
 	msg += `• _об изменении расписания_  -  *${(usersWithMyGroup.filter(u => u.notifications && u.notifications.scheduleChange).length/usersWithMyGroup.length*100).toFixed(0)}%*\n`;
-	msg += `• _расписание на день_  -  *${(usersWithMyGroup.filter(u => u.notifications && u.notifications.daySchedule).length/usersWithMyGroup.length*100).toFixed(0)}%*\n`;
+	msg += `• _расписание на день_  -  *${(usersWithMyGroup.filter(u => u.notifications && u.notifications.daySchedule).length/usersWithMyGroup.length*100).toFixed(0)}%*`;
 
 	ctx.replyWithMarkdown(msg);
 };

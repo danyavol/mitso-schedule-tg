@@ -1,6 +1,6 @@
 {
 	"name": "mitso-schedule-tg",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Telegram bot for MITSO students",
 	"main": "index.js",
 	"scripts": {
