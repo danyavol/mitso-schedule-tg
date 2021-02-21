@@ -43,10 +43,9 @@ function parseSchedulePage(html) {
 		$(elem).find('.rp-ras-opis > div').each((i, elem) => {
 			// Проверка, если ли даннные о занятии
 			if ( $(elem).find('.rp-r-op > div').length) {
-				const lessonFullName = $(elem).find('.rp-r-op > div').text();
-				const classRoom = $(elem).find('.rp-r-aud').text();
+				const lessonFullName = $(elem).find('.rp-r-op > div').html();
+				const classRoom = $(elem).find('.rp-r-aud').html();
 				const lessonTime = $(elem).find('.rp-r-time').text();
-
 				let data = normalizeLesson(lessonFullName, classRoom);
 
 				LESSONS.push({
