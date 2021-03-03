@@ -73,6 +73,11 @@ module.exports = async function createLinks(weekNumber) {
 		fakultet.inner.map(forma => {
 			forma.inner.map(kurse => {
 				kurse.inner.map(group => {
+
+					if (fakultet.name == 'YUridicheskij' && (group.name == '1820 ISiT' || group.name == '1821 ISiT')) 
+						return;
+
+
 					group.inner.map(week => {
 						if (weekNumber == null || weekNumber == week.name) {
 							if ( !Array.isArray(outputLinks[week.name]) ) outputLinks[week.name] = [];
