@@ -23,8 +23,8 @@ bot.use(session());
 /** Сохранение пользователя в БД при первом обращении
  * Пока не получится загрузить ctx.session.user, бот работать не будет */
 bot.use(async (ctx, next) => {
-	if (!getMsgFrom(ctx)) return;
-	
+	if (!getMsgFrom(ctx) || !ctx.session) return;
+
 	if (!ctx.session.user) {
 		let msgFrom = getMsgFrom(ctx);
 
