@@ -28,7 +28,7 @@ module.exports = async function saveAllSchedule() {
 	for (let nWeek in links) {
 		for (let link of links[nWeek]) {
 			if (requestCounter && requestCounter % 50 === 0) {
-				await sleep(25000);
+				await sleep(30000);
 			}
 			promiseArray.push( sendScheduleRequest(link) );
 			requestCounter++;

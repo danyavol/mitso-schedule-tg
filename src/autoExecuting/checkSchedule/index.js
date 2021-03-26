@@ -67,7 +67,7 @@ module.exports = async (bot) => {
 	let promiseArray = [];
 	let requestCounter = 0;
 	for (let group of GROUPS) {
-		if (requestCounter && requestCounter % 50 === 0) await sleep(25000);
+		if (requestCounter && requestCounter % 50 === 0) await sleep(30000);
 
 		promiseArray.push(new Promise(async (res, rej) => {
 			group.links = await createLinks(group.url);
@@ -84,7 +84,7 @@ module.exports = async (bot) => {
 	for (let group of GROUPS) {
 		group.mitsoSch = [];
 		for (let link of group.links) {
-			if (requestCounter && requestCounter % 50 === 0) await sleep(25000);
+			if (requestCounter && requestCounter % 50 === 0) await sleep(30000);
 
 			promiseArray.push(new Promise((res, rej) => {
 				sendScheduleRequest(link).then((result) => {
