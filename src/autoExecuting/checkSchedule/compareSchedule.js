@@ -16,7 +16,8 @@ module.exports = (groups) => {
 			let flag = true;
 			for (let k = groups[i].dbSch.length-1; k >= 0; k--) {
 				// Нужные недели найдены
-				if (groups[i].mitsoSch[j][0] && groups[i].dbSch[k][0] && groups[i].mitsoSch[j][0].week === groups[i].dbSch[k][0].week) {
+				if (groups[i].mitsoSch[j][0] && groups[i].dbSch[k][0] && 
+					groups[i].mitsoSch[j][0].week.split('-')[0] === groups[i].dbSch[k][0].week.split('-')[0]) {
 					// Удаляем одинаковые занятия
 					let result = compareTwoWeeks(groups[i].mitsoSch[j], groups[i].dbSch[k]);
 					// Если есть добавленные или удаленные занятия - добавляем их в groups[i].changes
@@ -62,7 +63,6 @@ function compareTwoWeeks(mitsoWeek, dbWeek) {
 			if (added[i].date === deleted[j].date
 				&& added[i].time === deleted[j].time
 				&& added[i].lessonName === deleted[j].lessonName
-				&& added[i].classRoom === deleted[j].classRoom
 				&& added[i].lessonType === deleted[j].lessonType) {
 
 				added.splice(i, 1);
@@ -110,11 +110,11 @@ function createChangeMessage(groupName, changes) {
 			msg += `\n\n📍 ${day.dayOfWeek}, ${longToShortDate(day.date)}`;
 			if (day.deleted)
 				for (let lesson of day.deleted) {
-					msg += `\n➖ ${lesson.time.split('-')[0]} ║ ${lesson.classRoom} ║ ${lesson.lessonName} (${lesson.lessonType})`;
+					msg += `\n➖ ${lesson.time.split('-')[0]} ║ ${lesson.classRoom} ║ ${lesson.lessonName} (${lesson.lessonType}) │ ${lesson.teachers.join(', ')}`;
 				}
 			if (day.added)
 				for (let lesson of day.added) {
-					msg += `\n➕ ${lesson.time.split('-')[0]} ║ ${lesson.classRoom} ║ ${lesson.lessonName} (${lesson.lessonType})`
+					msg += `\n➕ ${lesson.time.split('-')[0]} ║ ${lesson.classRoom} ║ ${lesson.lessonName} (${lesson.lessonType}) │ ${lesson.teachers.join(', ')}`
 				}
 		}
 

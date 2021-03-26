@@ -21,7 +21,7 @@ module.exports.weekSchedule = (lessons, firstTitle, secondTitle, writeGroup=fals
 			if (prevDate !== ls.date) msg += `\n📍 ${ls.day}, ${longToShortDate(ls.date)}\n`;
 
 			// Добавление информации о занятии
-			msg += `🏷 ${ls.time.split('-')[0]} ║ ${groupNumber}${ls.classRoom} ║ ${ls.lessonName} (${ls.lessonType}) │ ${ls.teachers.join(', ')}\n`;
+			msg += `🏷 ${ls.time.split('-').join(' - ')} ║ ${groupNumber}${ls.classRoom} ║ ${ls.lessonName} (${ls.lessonType}) │ ${ls.teachers.join(', ')}\n`;
 
 			// Сохранение даты предыдущего занятия, чтобы определять, когда начинается следующий день
 			prevDate = ls.date;
@@ -57,7 +57,7 @@ module.exports.daySchedule = (lessons, dayIncrement, dayInfo, showWhichDay = tru
 
 		msg += `\n📍 ${lessons[0].day}, ${longToShortDate(lessons[0].date)}\n`;
 		lessons.map(ls => {
-			msg += `🏷 ${ls.time.split('-').join(' - ')} ║ ${ls.classRoom} ║\n ${ls.lessonName} (${ls.lessonType}) │ ${ls.teachers.join(', ')}\n`;
+			msg += `🏷 ${ls.time.split('-').join(' - ')} ║ ${ls.classRoom} ║ ${ls.lessonName} (${ls.lessonType}) │ ${ls.teachers.join(', ')}\n`;
 		});
 	}
 	// Расписания нету

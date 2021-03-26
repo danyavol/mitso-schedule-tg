@@ -93,15 +93,14 @@ function normalizeLesson(lessonString, classRoomString) {
 
 	// Поиск названия занятия
 	lessonString = lessonString.split('\n').join(' ');
-	let index1 = lessonString.indexOf('(' + result.lessonType + ')');
-	let variant1 = lessonString.slice(0, index1).trim();
+	let index = lessonString.indexOf('(' + result.lessonType + ')');
+	let variant = lessonString.slice(0, index).trim();
+    
+	// Удаление цифры в начале названия
+    let num = variant.match(/^\d\./);
+    if (num) variant = variant.slice(2, variant.length).trim();
 
-	let index2 = variant1.search(/[А-Я]/);
-	let variant2 = lessonString.slice(index2, index1).trim();
-
-	if (variant2.length) result.lessonName = variant1;
-	else result.lessonName = variant2;
-
+    result.lessonName = variant;
 
 	return result;
 }
