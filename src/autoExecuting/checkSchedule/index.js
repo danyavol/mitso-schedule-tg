@@ -133,7 +133,9 @@ module.exports = async (bot) => {
 		for (let user of group.users) {
 			messages.push({userId: user, msg: group.msg});
 		}
+		console.log(group.msg);
 	}
+	
 	await sendBulkMessage(bot, messages);
 
 

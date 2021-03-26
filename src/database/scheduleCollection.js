@@ -5,9 +5,11 @@ const { encodeWeekNumber, selectWeek, getWeekTitle, getDate } = require('../comp
 module.exports.saveSchedule = async (schedule) => {
 	// schedule = [ [{week: , date: , lessonName: , ...}, ...] ]
 	let conn;
+	let st = Date.now();
+	let progress = '1';
 	try {
 		conn = await mongoose.createConnection(process.env.DB_URI+'/schedule', {useNewUrlParser: true, useUnifiedTopology: true});
-
+		progress = '2';
 		let promiseArray = [];
 		schedule.map(lessons => {
 			if (lessons[0]) {
@@ -24,8 +26,9 @@ module.exports.saveSchedule = async (schedule) => {
 		})
 
 		await Promise.all(promiseArray);
+		progress = '3';
 	} catch (e) {
-		console.error('Error saving schedule!', e);
+		console.error(`Error saving schedule! Времени прошло (мс)- ${Date.now() - st}. Progress == ${progress}\nSchedule: ${schedule}`, e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
@@ -74,13 +77,17 @@ module.exports.getAvailableWeeks = async (group, archive=false) => {
 /** Получение расписания на неделю выбранной группы */
 module.exports.getWeekSchedule = async (group, collectionName) => {
 	let conn, schedule;
+	let st = Date.now();
+	let progress = '1';
 	try {
 		conn = await mongoose.createConnection(process.env.DB_URI+'/schedule', {useNewUrlParser: true, useUnifiedTopology: true});
+		progress = '2';
 		let collection = conn.collection(collectionName);
-
+		progress = '3';
 		schedule = await collection.findOne({group: group});
+		progress = '4';
 	} catch (e) {
-		console.error('Error getting week schedule!', e);
+		console.error(`Error getting week schedule! Времени прошло (мс)- ${Date.now() - st}. Progress == ${progress}\nGroup: ${group}. Collection: ${collectionName}`, e);
 		return new Error('Ошибка соединения с базой данных');
 	} finally {
 		if (conn) conn.close();
