@@ -27,7 +27,7 @@ module.exports = (groups) => {
 					break;
 				}
 				if (groups[i].dbSch[k] instanceof Error) {
-					console.log('Была ошибка получения расписания из БД у группы', groups[i].group);
+					console.error('src/autoExecuting/checkSchedule/compareSchedule.js\n', 'Была ошибка получения расписания из БД у группы', groups[i].group);
 					flag = false;
 				}
 

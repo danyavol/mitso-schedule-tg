@@ -14,7 +14,7 @@ const sleep = require('../../components/sleep');
 const { saveSchedule } = require('../../database/scheduleCollection');
 
 module.exports = async function saveAllSchedule() {
-	console.log('Началось сохранение расписания всех групп... ', timeStamp());
+	console.info('Началось сохранение расписания всех групп... ', timeStamp());
 
 	/** Step 1 */
 	const links = await createLinks();
@@ -36,12 +36,12 @@ module.exports = async function saveAllSchedule() {
 	}
 	await Promise.all(promiseArray)
 		.then(response => SCHEDULE = response)
-		.catch(err => console.error('Promise all error', err));
+		.catch(err => console.error('src/autoExecuting/saveAllSchedule/index.js\n','Promise all error'));
 	/** End Step 2 */
 
 	/** Step 3 */
 	await saveSchedule(SCHEDULE);
 	/** End Step 3 */
 
-	console.log(`Сохранение расписания окончено... Недель сохранено - ${SCHEDULE.length}...`, timeStamp());
+	console.info(`Сохранение расписания окончено... Недель сохранено - ${SCHEDULE.length}...`, timeStamp());
 }

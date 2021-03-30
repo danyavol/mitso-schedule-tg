@@ -5,6 +5,7 @@ const httpsAgent =  new https.Agent({
 	rejectUnauthorized: false,
 
 });
+const handleError = require('../components/handleAxiosError.js');
 
 const cheerio = require('cheerio');
 
@@ -24,7 +25,7 @@ module.exports.getUserBalance = async (pass) => {
 			result = getBalanceFromHtml(response.data, pass);
 		})
 		.catch((err) => {
-			console.error('Error sending balance request to MITSO', err)
+			console.warn('src/balance/balance.js\n', 'Error sending balance request to MITSO', handleError(err))
 			result = getBalanceFromHtml(err, pass, true);
 		});
 	return result;
@@ -98,7 +99,7 @@ function getBalanceFromHtml(html, pass, ifError=false) {
 			result.text += `Баланc: ${s.eq(0).text()}\nОсновной долг: ${s.eq(1).text()}\nПеня: ${s.eq(2).text()}`
 		}
 	} catch (e) {
-		console.error(e);
+		console.error('src/balance/balance.js\n', e);
 		result.text = '⚠ Не удалось обработать запрос и получить данные о балансе.';
 		result.error = true;
 	}

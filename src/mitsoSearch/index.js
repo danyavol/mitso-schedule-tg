@@ -3,7 +3,7 @@
 const axios = require('axios');
 const https = require('https');
 const httpsAgent = new https.Agent( {rejectUnauthorized: false} );
-
+const handleError = require('../components/handleAxiosError.js');
 const cheerio = require('cheerio');
 
 module.exports = async (searchText) => {
@@ -23,6 +23,6 @@ module.exports = async (searchText) => {
 			return links;
 		})
 		.catch(reason => {
-			console.log(reason);
+			console.warn('src/mitsoSearch/index.js\n', handleError(reason));
 		});
 };

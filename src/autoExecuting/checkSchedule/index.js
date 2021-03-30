@@ -133,7 +133,7 @@ module.exports = async (bot) => {
 		for (let user of group.users) {
 			messages.push({userId: user, msg: group.msg});
 		}
-		console.log(group.msg);
+		console.info(group.msg);
 	}
 	
 	await sendBulkMessage(bot, messages);
@@ -141,5 +141,5 @@ module.exports = async (bot) => {
 
 	let time = ((Date.now() - start.getTime())/1000).toFixed(1);
 	if (GROUPS.length)
-		console.log(`Проверка расписания окончена. Времени прошло - ${time}сек\nГрупп обновилось - ${GROUPS.length}. Сообщений отправлено - ${messages.length}`);
+		console.info(`Проверка расписания окончена. Времени прошло - ${time}сек\nГрупп обновилось - ${GROUPS.length}. Сообщений отправлено - ${messages.length}`);
 };

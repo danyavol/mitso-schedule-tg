@@ -40,7 +40,7 @@ module.exports = async (bot) => {
 	let changedBalance = [];
 	for (let balance of allBalance) {
 		if (balance.error) {
-			console.error('Error getting balance!', balance.text);
+			console.warn('src/autoExecuting/checkBalance/index.js\n','Массовая проверка баланса. Не удалось получить баланс (МИТСО)', balance.text);
 			continue;
 		}
 		for (let user of users) {
@@ -99,5 +99,5 @@ module.exports = async (bot) => {
 	/** 6 */
 	sendBulkMessage(bot, sendArray);
 
-	if (sendArray.length) console.log(`У ${sendArray.length} пользователей есть изменения в балансе.`);
+	if (sendArray.length) console.info(`У ${sendArray.length} пользователей есть изменения в балансе.`);
 };

@@ -118,7 +118,7 @@ function sendLinkRequest(link, type='', fak='', form='', kurse='', group='') {
 			resolve();
 		})
 		.catch((reason) => {
-			console.error(reason);
+			console.warn('src/autoExecuting/saveAllSchedule/createLinks.js\n', 'Ошибка запроса к МИТСО. Составление ссылок на получение расписания');
 			resolve();
 		});
 	});

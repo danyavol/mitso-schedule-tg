@@ -70,8 +70,7 @@ function getMsgFrom(ctx) {
 	if (ctx.updateType === 'message') return ctx.message.from;
 	else if (ctx.updateType === 'callback_query') return ctx.update.callback_query.from;
 	else {
-		console.error('Не удается найти информацию о пользователе в контексте');
-		console.log('updateType: ', ctx.updateType);
+		console.error('/index.js\n','Не удается найти информацию о пользователе в контексте', ctx);
 	}
 }
 

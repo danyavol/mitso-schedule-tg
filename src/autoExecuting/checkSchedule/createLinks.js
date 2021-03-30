@@ -10,7 +10,7 @@
 const axios = require('axios');
 const https = require('https');
 const httpsAgent = new https.Agent( {rejectUnauthorized: false} );
-
+const handleError = require('../../components/handleAxiosError.js');
 const cheerio = require('cheerio');
 
 module.exports = async (groupUrl) => {
@@ -26,6 +26,6 @@ module.exports = async (groupUrl) => {
 				links.push(groupUrl + '/' + $(elem).val());
 			});
 		})
-		.catch(reason => console.log(reason));
+		.catch(error => console.warn('src/autoExecuting/checkSchedule/createLinks.js\n', handleError(error)));
 	return links;
 };
