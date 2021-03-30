@@ -1,7 +1,7 @@
 module.exports = function(error) {
     // Request made and server responded
     if (error.response) {
-        return `Server responded error. Status: ${error.response.status}. Data: ${error.response.data}. Headers: ${error.response.headers}`;
+        return `Server responded error. Status: ${error.response.status}. Data: ${error.response.data}. Headers: ${JSON.stringify(error.response.headers)}`;
       } 
       // The request was made but no response was received
       else if (error.request) {
