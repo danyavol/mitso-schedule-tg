@@ -73,6 +73,9 @@ function getMsgFrom(ctx) {
 	// В зависимости от типа входящего сообщения, данные о пользователе могут находиться в разных местах
 	if (ctx.updateType === 'message') return ctx.message.from;
 	else if (ctx.updateType === 'callback_query') return ctx.update.callback_query.from;
+	else if (ctx.update.my_chat_member || ctx.update.chat_member) {
+		console.info('Кто-то пригласил меня в беседу', JSON.stringify(ctx.update.my_chat_member));
+	}
 	else {
 		console.error('/index.js\n','Не удается найти информацию о пользователе в контексте', ctx);
 	}
