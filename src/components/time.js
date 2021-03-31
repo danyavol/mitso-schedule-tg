@@ -243,16 +243,15 @@ module.exports.getDate = (date, time="8:00-9:20") => {
 		case 'январ': date[1] = 0; break;
 		case 'феврал': date[1] = 1; break;
 		case 'март': date[1] = 2; break;
-		case 'мар': date[1] = 3; break;
-		case 'апрел': date[1] = 4; break;
-		case 'ма': date[1] = 5; break;
-		case 'июн': date[1] = 6; break;
-		case 'июл': date[1] = 7; break;
-		case 'август': date[1] = 8; break;
-		case 'сентябр': date[1] = 9; break;
-		case 'октябр': date[1] = 10; break;
-		case 'ноябр': date[1] = 11; break;
-		case 'декабр': date[1] = 12; break;
+		case 'апрел': date[1] = 3; break;
+		case 'ма': date[1] = 4; break;
+		case 'июн': date[1] = 5; break;
+		case 'июл': date[1] = 6; break;
+		case 'август': date[1] = 7; break;
+		case 'сентябр': date[1] = 8; break;
+		case 'октябр': date[1] = 9; break;
+		case 'ноябр': date[1] = 10; break;
+		case 'декабр': date[1] = 11; break;
 	}
 
 	let now = getMinskDate();
@@ -260,12 +259,12 @@ module.exports.getDate = (date, time="8:00-9:20") => {
 	if (date[1] > 9 && now.getMonth() < 3) now.setFullYear(now.getFullYear()-1);
 	else if (date[1] < 3 && now.getMonth() > 9) now.setFullYear(now.getFullYear()+1);
 
-	now.setMonth(date[1]);
-	now.setDate(+date[0]);
-	now.setHours(time[0]);
-	now.setMinutes(time[1]);
-	now.setSeconds(0);
 	now.setMilliseconds(0);
+	now.setSeconds(0);
+	now.setMinutes(time[1]);
+	now.setHours(time[0]);
+	now.setDate(+date[0]);
+	now.setMonth(date[1]);
 
 	return now.getTime();
 };
