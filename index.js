@@ -1,4 +1,5 @@
 require('dotenv').config()
+process.env.MAINTENANCE = false;
 
 const { Telegraf } = require('telegraf')
 const bot = new Telegraf(process.env.TG_BOT_TOKEN)
@@ -64,6 +65,9 @@ bot.use(async (ctx, next) => {
 	}
 	await next();
 });
+
+// Ручное управление ботом для админа
+bot.use(require('./src/maintenance'));
 
 function getMsgFrom(ctx) {
 	// В зависимости от типа входящего сообщения, данные о пользователе могут находиться в разных местах
