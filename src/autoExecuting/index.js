@@ -27,7 +27,7 @@ module.exports = async (bot) => {
 }
 
 function run(func, params = []) {
-	if (!process.env.MAINTENANCE) {
+	if (process.env.MAINTENANCE == 0) {
 		func(...params);
 	}
 }

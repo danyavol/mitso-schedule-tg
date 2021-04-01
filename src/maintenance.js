@@ -7,11 +7,13 @@ module.exports = (ctx, next) => {
 
         switch (command) {
             case '/stopmsg': 
-                process.env.MAINTENANCE = true;
-                return ctx.reply('Maintenance mod on');
+                ctx.reply(`Maintenance mod: ${process.env.MAINTENANCE}  =>  1`);
+                process.env.MAINTENANCE = 1;
+                return;
             case '/startmsg': 
-                process.env.MAINTENANCE = false;
-                return ctx.reply('Maintenance mod off');
+                ctx.reply(`Maintenance mod: ${process.env.MAINTENANCE}  =>  0`);
+                process.env.MAINTENANCE = 0;
+                return;
         }
     }
     next();
