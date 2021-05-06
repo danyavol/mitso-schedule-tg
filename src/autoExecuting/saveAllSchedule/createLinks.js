@@ -5,6 +5,7 @@ const httpsAgent = new https.Agent( {rejectUnauthorized: false} );
 const cheerio = require('cheerio');
 
 const { saveGroups } = require('../../database/groupsCollection');
+const { isWrongFakulty, isWrongCourse } = require('../../components/FUCKING_MITSO');
 
 let requestCounter = 0;
 
@@ -65,6 +66,7 @@ module.exports = async function createLinks(weekNumber) {
 	});
 	await Promise.all(promiseArray);
 	//console.log('Итого запросов было отправлено - ', requestCounter);
+
 	// Итоговое составление ссылок
 	let groupsList = []; // список всех групп университета, которые есть в расписании
 	let outputLinks = {}; // ссылки по которым нужно отправлять запрос на получение расписания
@@ -74,9 +76,8 @@ module.exports = async function createLinks(weekNumber) {
 			forma.inner.map(kurse => {
 				kurse.inner.map(group => {
 
-					if (fakultet.name == 'YUridicheskij' && (group.name == '1820 ISiT' || group.name == '1821 ISiT')) 
-						return;
-
+					if (isWrongFakulty(fakultet.name, group.title)) return;
+					if (isWrongCourse(kurse.name, group.title)) return;
 
 					group.inner.map(week => {
 						if (weekNumber == null || weekNumber == week.name) {
