@@ -15,7 +15,7 @@ module.exports = async function sendScheduleRequest(link) {
 			})
 			.catch(error => {
 				rejectedCount++;
-				console.warn('src/autoExecuting/saveAllSchedule/sendScheduleRequest.js\n', handleError(error));
+				console.warn('src/autoExecuting/saveAllSchedule/sendScheduleRequest.js\nURL:'+link+'\n', handleError(error));
 				rej();
 				//console.log(reason);
 			})

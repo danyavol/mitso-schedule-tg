@@ -16,9 +16,10 @@ const cheerio = require('cheerio');
 module.exports = async (groupUrl) => {
 	let group = groupUrl.split('/');
 	let links = [];
+	const requestLink = `https://mitso.by/schedule_update?type=date&kaf=Glavnaya%20kafedra&fak=${group[group.length-3]}&form=${group[group.length-4]}&kurse=${group[group.length-2]}&group_class=${group[group.length-1]}`;
+
 	await axios
-		.get(`https://mitso.by/schedule_update?type=date&kaf=Glavnaya%20kafedra&fak=${group[group.length-3]}&form=${group[group.length-4]}&kurse=${group[group.length-2]}&group_class=${group[group.length-1]}`,
-			{httpsAgent})
+		.get(requestLink, {httpsAgent})
 		.then(response => {
 			const $ = cheerio.load(response.data);
 
@@ -26,6 +27,6 @@ module.exports = async (groupUrl) => {
 				links.push(groupUrl + '/' + $(elem).val());
 			});
 		})
-		.catch(error => console.warn('src/autoExecuting/checkSchedule/createLinks.js\n', handleError(error)));
+		.catch(error => console.warn('src/autoExecuting/checkSchedule/createLinks.js\nURL:'+requestLink+'\n', handleError(error)));
 	return links;
 };
