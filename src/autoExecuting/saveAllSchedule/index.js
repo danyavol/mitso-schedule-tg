@@ -24,14 +24,10 @@ module.exports = async function saveAllSchedule() {
 	let SCHEDULE = [];
 
 	let promiseArray = [];
-	let requestCounter = 0;
 	for (let nWeek in links) {
 		for (let link of links[nWeek]) {
-			if (requestCounter && requestCounter % 50 === 0) {
-				await sleep(30000);
-			}
 			promiseArray.push( sendScheduleRequest(link) );
-			requestCounter++;
+			await sleep(1000);
 		}
 	}
 	await Promise.all(promiseArray)

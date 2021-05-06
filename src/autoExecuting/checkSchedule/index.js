@@ -65,34 +65,28 @@ module.exports = async (bot) => {
 
 	/** 3 */
 	let promiseArray = [];
-	let requestCounter = 0;
 	for (let group of GROUPS) {
-		if (requestCounter && requestCounter % 50 === 0) await sleep(30000);
-
 		promiseArray.push(new Promise(async (res, rej) => {
 			group.links = await createLinks(group.url);
 			res();
 		}));
-		requestCounter++;
+		await sleep(1000);
 	}
 	await Promise.all(promiseArray);
 
 
 	/** 4 */
 	promiseArray = [];
-	requestCounter = 0;
 	for (let group of GROUPS) {
 		group.mitsoSch = [];
 		for (let link of group.links) {
-			if (requestCounter && requestCounter % 50 === 0) await sleep(30000);
-
 			promiseArray.push(new Promise((res, rej) => {
 				sendScheduleRequest(link).then((result) => {
 					group.mitsoSch.push(result);
 					res();
 				}).catch(rej);
 			}));
-			requestCounter++;
+			await sleep(1000);
 		}
 	}
 	await Promise.all(promiseArray);
