@@ -10,26 +10,42 @@ module.exports = (ctx, next) => {
                 ctx.reply(getAdminCommandList());
                 return;
             case '/maintenance_start': 
-                ctx.reply(`Maintenance mod: ${getMaintenVal(process.env.MAINTENANCE)}  =>  On`);
                 process.env.MAINTENANCE = 1;
+                ctx.reply(getAdminCommandList());
                 return;
-            case '/maintenance_stop': 
-                ctx.reply(`Maintenance mod: ${getMaintenVal(process.env.MAINTENANCE)}  =>  Off`);
+            case '/maintenance_stop':
                 process.env.MAINTENANCE = 0;
+                ctx.reply(getAdminCommandList());
+                return;
+            case '/sendDaySch_start':
+                process.env.SEND_DAY_SCH = 1;
+                ctx.reply(getAdminCommandList());
+                return;
+            case '/sendDaySch_stop':
+                process.env.SEND_DAY_SCH = 0;
+                ctx.reply(getAdminCommandList());
                 return;
         }
     }
     next();
 
-    function getMaintenVal(val) {
-        if (val == 0) return 'Off'
-        else return 'On';
+    function getVal(val) {
+        if (val == 0) return '❌ Off'
+        else if (val == 1) return '✅ On';
+        return '??';
     }
 
     function getAdminCommandList() {
-        let str = '🖥 Панель администратора:\n\n';
-        str += `Режим техобслуживания - ${getMaintenVal(process.env.MAINTENANCE)}\n\n`;
+        let str = '🖥 Панель администратора:';
+
+        str += `\n\n/stats - статистика бота`;
+
+        str += `\n\nРежим техобслуживания - ${getVal(process.env.MAINTENANCE)}\n`;
         str += `/maintenance_start - включить техобслуживание\n/maintenance_stop - выключить техобслуживание`;
+
+        str += `\n\nОтправлять расписание на день - ${getVal(process.env.SEND_DAY_SCH)}\n`;
+        str += `/sendDaySch_start - включить отправку\n/sendDaySch_stop - выключить отправку`;
+
         return str;
     }
 }

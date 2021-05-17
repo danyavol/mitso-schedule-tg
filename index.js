@@ -1,5 +1,6 @@
 require('dotenv').config()
 process.env.MAINTENANCE = 0;
+process.env.SEND_DAY_SCH = 1;
 
 const { Telegraf } = require('telegraf')
 const bot = new Telegraf(process.env.TG_BOT_TOKEN)
