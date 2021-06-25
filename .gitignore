@@ -1,5 +1,5 @@
 /.idea/
 /node_modules/
-.env
+.env.local
 test.js
 package-lock.json
